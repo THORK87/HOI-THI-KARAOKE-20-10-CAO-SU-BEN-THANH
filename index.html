@@ -1,79 +1,77 @@
-html_content = """<!DOCTYPE html>
+html_all_in_one = """<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hội Thi Karaoke Chào Mừng 20/10</title>
+  <title>Điều Hành & Chấm Điểm Karaoke 20/10</title>
   <style>
     :root {
       --primary: #9b111e;
-      --primary-dark: #6e0c15;
-      --primary-light: #c2185b;
+      --primary-dark: #5e0911;
       --gold: #d4af37;
       --gold-light: #f9e79f;
       --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
       --rose-gradient: linear-gradient(135deg, #880e4f, #ad1457, #c2185b);
       --bg: #120509;
-      --card-bg: rgba(35, 12, 22, 0.85);
+      --card-bg: rgba(35, 12, 22, 0.9);
       --border-color: rgba(212, 175, 55, 0.35);
       --text: #fff5f7;
       --text-muted: #e2b6c4;
-      --success: #2e7d32;
       --danger: #c62828;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body {
-      background-color: var(--bg);
-      background-image: radial-gradient(circle at 15% 15%, rgba(194, 24, 91, 0.25) 0%, transparent 40%),
-                        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.18) 0%, transparent 40%);
+      background: var(--bg);
+      background-image: radial-gradient(circle at 15% 15%, rgba(194, 24, 91, 0.22) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.15) 0%, transparent 40%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* BANNER */
     header {
-      background: linear-gradient(180deg, rgba(110, 12, 21, 0.95) 0%, rgba(35, 12, 22, 0.95) 100%);
+      background: linear-gradient(180deg, rgba(94, 9, 17, 0.98) 0%, rgba(35, 12, 22, 0.98) 100%);
       border-bottom: 2px solid var(--gold);
-      padding: 24px 16px;
-      text-align: center;
-      position: relative;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
 
-    .banner-title {
-      font-size: 1.8rem;
+    .banner-text h1 {
+      font-size: 1.45rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
       background: var(--gold-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
     }
 
-    .banner-subtitle {
-      font-size: 1.05rem;
-      color: #ffd1dc;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+    .banner-text p { font-size: 0.82rem; color: #ffd1dc; }
+
+    .projector-bar {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    /* TABS */
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #757575; display: inline-block; }
+    .status-dot.online { background: #00e676; box-shadow: 0 0 8px #00e676; }
+
     nav.tabs-nav {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin: 16px auto;
+      margin: 14px auto;
       max-width: 1200px;
       padding: 0 12px;
       flex-wrap: wrap;
@@ -83,68 +81,37 @@ html_content = """<!DOCTYPE html>
       background: rgba(45, 15, 27, 0.9);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      padding: 10px 20px;
-      border-radius: 30px;
+      padding: 9px 18px;
+      border-radius: 25px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.25s ease;
+      gap: 6px;
     }
 
-    .tab-btn:hover {
-      background: rgba(194, 24, 91, 0.4);
-      color: #fff;
-      border-color: var(--gold);
-    }
+    .tab-btn:hover { background: rgba(194, 24, 91, 0.35); color: #fff; border-color: var(--gold); }
+    .tab-btn.active { background: var(--rose-gradient); color: #fff; border-color: var(--gold); box-shadow: 0 0 12px rgba(212, 175, 55, 0.35); }
 
-    .tab-btn.active {
-      background: var(--rose-gradient);
-      color: #fff;
-      border-color: var(--gold);
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.4);
-    }
+    main { flex: 1; max-width: 1240px; width: 100%; margin: 0 auto; padding: 0 16px 24px 16px; }
 
-    /* MAIN CONTAINER */
-    main {
-      flex: 1;
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0 16px 24px 16px;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .tab-content {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* CARD STYLES */
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(8px);
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
 
     .card-title {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       color: var(--gold-light);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       padding-bottom: 8px;
       border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       display: flex;
@@ -152,19 +119,11 @@ html_content = """<!DOCTYPE html>
       align-items: center;
     }
 
-    /* GRID LAYOUTS */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 20px;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    @media(min-width: 900px) { .grid-2 { grid-template-columns: 1.25fr 0.75fr; } }
 
-    @media(min-width: 860px) {
-      .grid-2 { grid-template-columns: 1.2fr 0.8fr; }
-    }
-
-    /* VIDEO PLAYER */
-    .video-wrapper {
+    /* KHUNG PHÁT ĐA NĂNG (HỖ TRỢ MP4 OFFLINE, TẢI FILE TỪ GITHUB, HOẶC YOUTUBE) */
+    .media-box {
       position: relative;
       padding-bottom: 56.25%;
       height: 0;
@@ -173,291 +132,165 @@ html_content = """<!DOCTYPE html>
       border: 2px solid var(--gold);
       background: #000;
     }
-
-    .video-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* CONTROLS & FORMS */
-    .input-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-
-    input, select, textarea {
-      background: rgba(18, 5, 9, 0.85);
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      border-radius: 6px;
-      padding: 10px 14px;
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-    }
-
-    input::placeholder {
-      color: rgba(226, 182, 196, 0.6);
+    .media-box video, .media-box iframe {
+      position: absolute; top:0; left:0; width:100%; height:100%; border:none;
     }
 
     .btn {
-      padding: 10px 18px;
+      padding: 8px 14px;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-size: 0.85rem;
+    }
+    .btn-gold { background: var(--gold-gradient); color: #3e2723; }
+    .btn-rose { background: var(--rose-gradient); color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
+    .btn-outline:hover { border-color: var(--gold); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
+
+    input, select {
+      background: rgba(18, 5, 9, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #fff;
       font-size: 0.9rem;
+      outline: none;
     }
 
-    .btn-gold {
-      background: var(--gold-gradient);
-      color: #3e2723;
-    }
-
-    .btn-gold:hover {
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
-      transform: translateY(-1px);
-    }
-
-    .btn-rose {
-      background: var(--rose-gradient);
-      color: #fff;
-    }
-
-    .btn-rose:hover {
-      box-shadow: 0 0 12px rgba(194, 24, 91, 0.5);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-    }
-
-    .btn-outline:hover {
-      border-color: var(--gold);
-      color: #fff;
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: #fff;
-    }
-
-    .btn-sm {
-      padding: 6px 12px;
-      font-size: 0.8rem;
-    }
-
-    /* TABLES */
-    .table-container {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .source-control-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
       margin-top: 10px;
-      text-align: left;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px dashed var(--gold);
+      flex-wrap: wrap;
     }
 
-    th {
-      background: rgba(60, 16, 30, 0.8);
-      color: var(--gold-light);
-      padding: 12px 10px;
-      font-weight: 600;
-      border-bottom: 2px solid var(--gold);
-      white-space: nowrap;
+    .now-playing {
+      background: linear-gradient(90deg, rgba(136, 14, 79, 0.6) 0%, rgba(35, 12, 22, 0.8) 100%);
+      border-left: 4px solid var(--gold);
+      padding: 12px 16px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
     }
 
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-      vertical-align: middle;
-    }
-
-    tr:hover td {
-      background: rgba(194, 24, 91, 0.12);
-    }
-
-    /* BADGES */
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
-
-    .badge-rank-1 { background: #ffd700; color: #000; box-shadow: 0 0 8px rgba(255, 215, 0, 0.5); }
-    .badge-rank-2 { background: #e0e0e0; color: #000; }
-    .badge-rank-3 { background: #cd7f32; color: #fff; }
-    .badge-rank-other { background: rgba(255, 255, 255, 0.1); color: #fff; }
-
-    /* JUDGE SCORING FORM */
-    .score-criteria-grid {
+    .criteria-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
       margin: 16px 0;
     }
-
-    .criteria-box {
+    .criteria-card {
       background: rgba(18, 5, 9, 0.7);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      padding: 12px;
     }
+    .criteria-card label { font-size: 0.85rem; font-weight: 600; color: var(--gold-light); display: block; margin-bottom: 4px; }
+    .criteria-card .desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+    .criteria-card input { font-size: 1.25rem; font-weight: bold; text-align: center; color: var(--gold); width: 100%; }
 
-    .criteria-box label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--gold-light);
-    }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.88rem; }
+    th { background: rgba(60, 16, 30, 0.85); color: var(--gold-light); padding: 10px; border-bottom: 2px solid var(--gold); text-align: left; }
+    td { padding: 9px; border-bottom: 1px solid rgba(212, 175, 55, 0.15); }
+    .badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+    .badge-rank-1 { background: #ffd700; color: #000; }
+    .badge-rank-2 { background: #e0e0e0; color: #000; }
+    .badge-rank-3 { background: #cd7f32; color: #fff; }
 
-    .criteria-box span.sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .criteria-box input {
-      font-size: 1.25rem;
-      font-weight: bold;
-      text-align: center;
-      color: var(--gold);
-    }
-
-    /* CURRENT SINGER HERO */
-    .now-performing {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(90deg, rgba(136, 14, 79, 0.5) 0%, rgba(35, 12, 22, 0.6) 100%);
-      border-left: 4px solid var(--gold);
-      padding: 14px 18px;
-      border-radius: 6px;
-      margin-bottom: 14px;
-    }
-
-    .now-performing h3 {
-      font-size: 1.2rem;
-      color: #fff;
-    }
-
-    .now-performing p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* TOAST NOTIFICATION */
     #toast {
-      visibility: hidden;
-      min-width: 260px;
-      background: var(--gold-gradient);
-      color: #3e2723;
-      text-align: center;
-      border-radius: 8px;
-      padding: 14px 20px;
-      position: fixed;
-      z-index: 999;
-      bottom: 30px;
-      right: 30px;
-      font-weight: 700;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-      transform: translateY(20px);
+      visibility: hidden; min-width: 250px; background: var(--gold-gradient); color: #3e2723;
+      text-align: center; border-radius: 8px; padding: 12px 18px; position: fixed; z-index: 9999;
+      bottom: 25px; right: 25px; font-weight: 700; box-shadow: 0 4px 16px rgba(0,0,0,0.6);
       transition: all 0.3s ease;
     }
-
-    #toast.show {
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    /* FOOTER */
-    footer {
-      text-align: center;
-      padding: 18px;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      border-top: 1px solid rgba(212, 175, 55, 0.2);
-      margin-top: auto;
-    }
+    #toast.show { visibility: visible; }
   </style>
 </head>
 <body>
 
-  <!-- BANNER TIÊU ĐỀ -->
   <header>
-    <div class="banner-title">HỘI THI KARAOKE CHÀO MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10</div>
-    <div class="banner-subtitle">Tôn vinh nét đẹp, tài năng & tiếng hát Người Phụ Nữ Việt Nam</div>
+    <div class="banner-text">
+      <h1>HỘI THI KARAOKE 20/10</h1>
+      <p>Hỗ Trợ Video MP4 Upload Trực Tiếp • Video Trên GitHub • Nhạc YouTube</p>
+    </div>
+
+    <div class="projector-bar">
+      <span class="status-dot" id="projectorIndicator"></span>
+      <span style="font-size: 0.85rem;" id="projectorStatusText">Màn hình chiếu: Chưa mở</span>
+      <button class="btn btn-gold btn-sm" onclick="openProjectorWindow()">📺 Mở Cửa Sổ Máy Chiếu</button>
+    </div>
   </header>
 
-  <!-- ĐIỀU HƯỚNG TAB -->
   <nav class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('stage')">🎤 Sân Khấu & Biểu Diễn</button>
-    <button class="tab-btn" onclick="switchTab('judge')">📝 Bàn Giám Khảo Chấm Điểm</button>
-    <button class="tab-btn" onclick="switchTab('ranking')">🏆 Bảng Xếp Hạng & Trao Giải</button>
-    <button class="tab-btn" onclick="switchTab('admin')">⚙️ Quản Lý Thí Sinh & Dữ Liệu</button>
+    <button class="tab-btn active" onclick="switchTab('stage')">🎤 Sân Khấu & Phát Video</button>
+    <button class="tab-btn" onclick="switchTab('judge')">📝 Bàn Giám Khảo (Bảo Mật)</button>
+    <button class="tab-btn" onclick="switchTab('ranking')">🏆 Bảng Xếp Hạng</button>
+    <button class="tab-btn" onclick="switchTab('admin')">⚙️ Quản Lý Thí Sinh & Video</button>
   </nav>
 
-  <!-- NỘI DUNG CHÍNH -->
   <main>
-    <!-- TAB 1: SÂN KHẤU & BIỂU DIỄN -->
+    <!-- TAB 1: SÂN KHẤU -->
     <div id="tab-stage" class="tab-content active">
       <div class="grid-2">
-        <div>
-          <div class="card">
-            <div class="card-title">
-              <span>Màn Hình Hát Karaoke</span>
-              <span id="playingSongLabel" style="font-size: 0.85rem; color: var(--gold);">Đang chờ phát</span>
-            </div>
-            
-            <div class="video-wrapper">
-              <iframe id="karaokePlayer" src="https://www.youtube.com/embed/fJ9rUzIMcZQ?enablejsapi=1" allowfullscreen allow="autoplay"></iframe>
-            </div>
+        <div class="card">
+          <div class="card-title">
+            <span>Màn Hình Phát Karaoke</span>
+            <span id="playingTitle" style="font-size: 0.85rem; color: var(--gold);">Đang chờ bài</span>
+          </div>
 
-            <div class="input-row">
-              <input type="text" id="customYoutubeUrl" placeholder="Dán link YouTube hoặc Video ID bài hát..." style="flex: 1;">
-              <button class="btn btn-gold" onclick="loadCustomSong()">Tải Bài Hát</button>
+          <!-- MÀN HÌNH CHÍNH -->
+          <div class="media-box" id="mediaBox">
+            <video id="laptopVideo" controls playsinline style="display:none;"></video>
+            <iframe id="laptopYoutube" src="" style="display:none;" allowfullscreen allow="autoplay"></iframe>
+            <div id="emptyScreen" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#ffd1dc; text-align:center; padding:16px;">
+              <p style="font-size:1.15rem; font-weight:bold; color:var(--gold-light);">SẴN SÀNG BIỂU DIỄN</p>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Bấm "Upload video từ máy" hoặc chọn thí sinh bên phải</p>
             </div>
+          </div>
+
+          <!-- THANH ĐIỀU KHIỂN & CHỌN NHANH VIDEO -->
+          <div class="source-control-bar">
+            <label class="btn btn-gold btn-sm" style="cursor:pointer; margin:0;">
+              📤 Tải Lên Video MP4 Từ Máy
+              <input type="file" accept="video/mp4,video/webm" style="display:none;" onchange="handleDirectUpload(event)">
+            </label>
+            <input type="text" id="manualInputUrl" placeholder="Hoặc dán Link YouTube / tên file MP4..." style="flex:1; min-width:200px;">
+            <button class="btn btn-rose btn-sm" onclick="handleManualPlay()">Phát Bài</button>
           </div>
         </div>
 
-        <div>
-          <div class="card">
-            <div class="card-title">Thí Sinh Đang Trình Bày</div>
-            <div id="currentStageBox" class="now-performing">
-              <div>
-                <h3 id="stageCandName">Chưa chọn thí sinh</h3>
-                <p id="stageCandSong">Bài hát: --</p>
-                <p id="stageCandDept" style="font-size: 0.8rem; color: var(--gold-light);">Đơn vị: --</p>
-              </div>
-              <button class="btn btn-rose btn-sm" onclick="switchTab('judge')">Chấm Thí Sinh Này</button>
+        <div class="card">
+          <div class="card-title">Thí Sinh Đang Lên Sân Khấu</div>
+          <div class="now-playing">
+            <div>
+              <h3 id="currentCandName" style="color:#fff; font-size:1.1rem;">Chưa chọn thí sinh</h3>
+              <p id="currentCandSong" style="font-size:0.85rem; color:var(--text-muted);">Bài hát: --</p>
+              <p id="currentCandDept" style="font-size:0.8rem; color:var(--gold-light);">Đơn vị: --</p>
             </div>
-
-            <div class="card-title" style="margin-top: 20px;">Danh Sách Lên Sân Khấu</div>
-            <div id="stageQueue" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
-              <!-- Render danh sách chờ hát -->
-            </div>
+            <button class="btn btn-rose btn-sm" onclick="switchTab('judge')">Chấm Điểm Ngay</button>
           </div>
+
+          <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-outline btn-sm" onclick="sendProjectorCommand('MODE_POSTER')">🖼️ Chiếu Banner 20/10</button>
+            <button class="btn btn-outline btn-sm" onclick="sendProjectorCommand('MODE_RANKING')">🏆 Chiếu Bảng Vinh Danh</button>
+          </div>
+
+          <div class="card-title" style="margin-top: 16px;">Danh Sách Chờ Lên Sân Khấu</div>
+          <div id="stageQueue" style="display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto;"></div>
         </div>
       </div>
     </div>
@@ -466,151 +299,126 @@ html_content = """<!DOCTYPE html>
     <div id="tab-judge" class="tab-content">
       <div class="card">
         <div class="card-title">
-          <span>Phiếu Chấm Điểm Ban Giám Khảo</span>
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Thang điểm 100</span>
+          <span>Bàn Giám Khảo Chấm Điểm (Bảo Mật Trên Máy Tính)</span>
+          <span style="font-size: 0.85rem; color: var(--gold);">Thang Điểm 100</span>
         </div>
 
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 16px;">
-          <div style="flex: 1; min-width: 250px;">
-            <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Chọn Giám khảo:</label>
-            <select id="judgeSelector" onchange="onJudgeChange()" style="width: 100%;">
-              <option value="1">Giám Khảo 1 (Trưởng BGK)</option>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
+          <div style="flex: 1; min-width: 220px;">
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Giám Khảo:</label>
+            <select id="judgeNum" onchange="onJudgeSwitch()" style="width: 100%;">
+              <option value="1">Giám Khảo 1 (Trưởng Ban)</option>
               <option value="2">Giám Khảo 2</option>
               <option value="3">Giám Khảo 3</option>
             </select>
           </div>
 
-          <div style="flex: 1.5; min-width: 280px;">
-            <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Chọn Thí sinh chấm điểm:</label>
-            <select id="judgeCandSelect" onchange="loadScoreForCurrentJudge()" style="width: 100%; font-weight: bold; color: var(--gold);"></select>
+          <div style="flex: 1.5; min-width: 260px;">
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Thí Sinh Đang Chấm:</label>
+            <select id="judgeCand" onchange="onJudgeCandChange()" style="width: 100%; font-weight: bold; color: var(--gold);"></select>
           </div>
         </div>
 
-        <div id="judgePerfInfo" class="now-performing" style="margin-bottom: 16px;">
+        <div class="criteria-grid">
+          <div class="criteria-card">
+            <label>1. Giọng hát (Tối đa 40đ)</label>
+            <div class="desc">Âm sắc, cao độ, phát âm, nội lực</div>
+            <input type="number" id="scVoice" min="0" max="40" value="35" oninput="calcTotalScore()">
+          </div>
+
+          <div class="criteria-card">
+            <label>2. Nhịp phách (Tối đa 30đ)</label>
+            <div class="desc">Đúng nhịp điệu, tiết tấu, phách chuẩn</div>
+            <input type="number" id="scRhythm" min="0" max="30" value="26" oninput="calcTotalScore()">
+          </div>
+
+          <div class="criteria-card">
+            <label>3. Phong cách (Tối đa 20đ)</label>
+            <div class="desc">Tự tin, biểu cảm, trang phục 20/10</div>
+            <input type="number" id="scStyle" min="0" max="20" value="18" oninput="calcTotalScore()">
+          </div>
+
+          <div class="criteria-card">
+            <label>4. Cảm xúc (Tối đa 10đ)</label>
+            <div class="desc">Truyền tải cảm xúc, tinh tế</div>
+            <input type="number" id="scEmotion" min="0" max="10" value="9" oninput="calcTotalScore()">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 8px; border: 1px dashed var(--gold);">
           <div>
-            <h3 id="judgeCandNameDisplay">--</h3>
-            <p id="judgeCandDetailDisplay">Bài hát: -- | Đơn vị: --</p>
+            <span style="font-size: 0.95rem; color: var(--text-muted);">Tổng điểm: </span>
+            <span id="judgeSumScore" style="font-size: 1.6rem; font-weight: 800; color: var(--gold); margin-left: 6px;">88.0</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);"> / 100đ</span>
           </div>
-        </div>
-
-        <div class="score-criteria-grid">
-          <div class="criteria-box">
-            <label>1. Giọng hát & Cao độ (Tối đa 40đ)</label>
-            <span class="sub">Âm sắc, phát âm chuẩn, đúng cao độ, nội lực.</span>
-            <input type="number" id="scoreVoice" min="0" max="40" value="35" oninput="calculateJudgeTotal()">
-          </div>
-
-          <div class="criteria-box">
-            <label>2. Nhịp phách & Tiết tấu (Tối đa 30đ)</label>
-            <span class="sub">Bắt nhịp chuẩn, giữ vững nhịp, không trật phách.</span>
-            <input type="number" id="scoreRhythm" min="0" max="30" value="26" oninput="calculateJudgeTotal()">
-          </div>
-
-          <div class="criteria-box">
-            <label>3. Phong cách & Trang phục (Tối đa 20đ)</label>
-            <span class="sub">Tự tin, biểu cảm, duyên dáng, trang phục 20/10.</span>
-            <input type="number" id="scoreStyle" min="0" max="20" value="18" oninput="calculateJudgeTotal()">
-          </div>
-
-          <div class="criteria-box">
-            <label>4. Cảm xúc & Sáng tạo (Tối đa 10đ)</label>
-            <span class="sub">Truyền tải cảm xúc chân thành, xử lý tinh tế.</span>
-            <input type="number" id="scoreEmotion" min="0" max="10" value="9" oninput="calculateJudgeTotal()">
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 14px 18px; border-radius: 8px; border: 1px dashed var(--gold);">
-          <div>
-            <span style="font-size: 0.95rem; color: var(--text-muted);">Tổng điểm Giám Khảo này chấm: </span>
-            <span id="judgeTotalScore" style="font-size: 1.6rem; font-weight: 800; color: var(--gold); margin-left: 8px;">88.0</span>
-            <span style="font-size: 0.9rem; color: var(--text-muted);"> / 100đ</span>
-          </div>
-          <button class="btn btn-gold" onclick="saveJudgeScore()">💾 Lưu Điểm Chấm</button>
+          <button class="btn btn-gold" onclick="saveScore()">💾 Lưu Điểm Chấm</button>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: BẢNG XẾP HẠNG & KẾT QUẢ -->
+    <!-- TAB 3: BẢNG XẾP HẠNG -->
     <div id="tab-ranking" class="tab-content">
       <div class="card">
         <div class="card-title">
-          <span>Bảng Xếp Hạng Chung Cuộc</span>
+          <span>Bảng Xếp Hạng Kết Quả</span>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-outline btn-sm" onclick="exportToCSV()">📥 Xuất File CSV / Excel</button>
-            <button class="btn btn-gold btn-sm" onclick="window.print()">🖨️ In Bảng Điểm</button>
+            <button class="btn btn-rose btn-sm" onclick="sendProjectorCommand('MODE_RANKING')">📺 Chiếu Lên Máy Chiếu</button>
+            <button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 Xuất Excel/CSV</button>
           </div>
         </div>
 
-        <div class="table-container">
+        <div style="overflow-x: auto;">
           <table>
             <thead>
               <tr>
-                <th style="width: 60px; text-align: center;">Hạng</th>
+                <th style="width: 50px; text-align: center;">Hạng</th>
                 <th>SBD</th>
                 <th>Họ và Tên</th>
-                <th>Đơn Vị / Phòng Ban</th>
-                <th>Bài Hát Dự Thi</th>
+                <th>Đơn Vị</th>
+                <th>Bài Hát</th>
                 <th style="text-align: center;">GK 1</th>
                 <th style="text-align: center;">GK 2</th>
                 <th style="text-align: center;">GK 3</th>
-                <th style="text-align: center; color: var(--gold);">Điểm Trung Bình</th>
+                <th style="text-align: center; color: var(--gold);">Điểm TB</th>
               </tr>
             </thead>
-            <tbody id="rankingTableBody">
-              <!-- Render tự động -->
-            </tbody>
+            <tbody id="rankingTable"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: QUẢN LÝ DỮ LIỆU -->
+    <!-- TAB 4: QUẢN LÝ -->
     <div id="tab-admin" class="tab-content">
       <div class="grid-2">
         <div class="card">
           <div class="card-title">Thêm Thí Sinh Mới</div>
-          <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Số báo danh (SBD):</label>
-              <input type="text" id="adminSbd" placeholder="VD: SBD-01" style="width: 100%;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <input type="text" id="newSbd" placeholder="Số báo danh (VD: 2010-05)">
+            <input type="text" id="newName" placeholder="Họ và tên thí sinh">
+            <input type="text" id="newDept" placeholder="Đơn vị / Phòng ban">
+            <input type="text" id="newSong" placeholder="Tên bài hát dự thi">
+            
+            <div style="border: 1px dashed var(--gold); padding: 10px; border-radius: 6px;">
+              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 1: Gán file MP4 từ máy tính cho thí sinh này:</span>
+              <input type="file" id="newCandMp4" accept="video/mp4,video/webm" style="width:100%; font-size:0.8rem;">
             </div>
-            <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Họ và tên thí sinh:</label>
-              <input type="text" id="adminName" placeholder="VD: Nguyễn Thị Lan" style="width: 100%;">
+
+            <div style="border: 1px dashed rgba(212,175,55,0.4); padding: 10px; border-radius: 6px;">
+              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 2: Hoặc gõ tên file MP4 trên GitHub / Link YouTube:</span>
+              <input type="text" id="newVideoSource" placeholder="VD: bai1.mp4 HOẶC link YouTube" style="width:100%; font-size:0.85rem;">
             </div>
-            <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Đơn vị / Phòng ban:</label>
-              <input type="text" id="adminDept" placeholder="VD: Công đoàn Khối Văn phòng" style="width: 100%;">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Bài hát dự thi:</label>
-              <input type="text" id="adminSong" placeholder="VD: Cô Gái Mở Đường" style="width: 100%;">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted);">Link YouTube hoặc Video ID (Karaoke):</label>
-              <input type="text" id="adminVideo" placeholder="Link YouTube (hoặc bỏ trống)" style="width: 100%;">
-            </div>
-            <button class="btn btn-rose" onclick="addCandidate()">➕ Thêm Vào Danh Sách</button>
+
+            <button class="btn btn-rose" onclick="addNewCandidate()">➕ Lưu Thí Sinh</button>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">
-            <span>Danh Sách & Thao Tác Dữ Liệu</span>
-            <button class="btn btn-danger btn-sm" onclick="resetToDefaultData()">Cài Lại Mặc Định</button>
+            <span>Danh Sách Thí Sinh Dự Thi</span>
+            <button class="btn btn-danger btn-sm" onclick="resetDefaults()">Cài Lại Mặc Định</button>
           </div>
-
-          <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-            <button class="btn btn-outline btn-sm" onclick="exportJSONBackup()">Sao Lưu (JSON)</button>
-            <label class="btn btn-outline btn-sm" style="cursor: pointer; margin: 0;">
-              Phục Hồi (JSON)
-              <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="importJSONBackup(event)">
-            </label>
-          </div>
-
-          <div id="adminCandidatesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto;">
-            <!-- Render danh sách quản trị -->
-          </div>
+          <div id="adminCandList" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto;"></div>
         </div>
       </div>
     </div>
@@ -618,20 +426,12 @@ html_content = """<!DOCTYPE html>
 
   <div id="toast">Thông báo</div>
 
-  <footer>
-    Hội thi văn nghệ chào mừng Ngày Phụ nữ Việt Nam 20/10 • Bản quyền chương trình nội bộ
-  </footer>
-
   <script>
-    // DỮ LIỆU BAN ĐẦU MẪU CHỦ ĐỀ 20/10
-    const DEFAULT_DATA = [
+    // Dữ liệu ban đầu
+    const DEFAULT_CANDIDATES = [
       {
-        id: 1,
-        sbd: "2010-01",
-        name: "Lê Thị Mai Hương",
-        dept: "Công đoàn Khối Văn Phòng",
-        song: "Huyền Thoại Mẹ",
-        videoId: "1b88xJtI-3w",
+        id: 1, sbd: "2010-01", name: "Lê Thị Mai Hương", dept: "Khối Văn Phòng", song: "Huyền Thoại Mẹ",
+        videoSource: "fJ9rUzIMcZQ", // Có thể là YouTube ID hoặc tên file mp4 như 'bai1.mp4'
         scores: {
           1: { voice: 36, rhythm: 27, style: 18, emotion: 9 },
           2: { voice: 37, rhythm: 28, style: 19, emotion: 9 },
@@ -639,12 +439,8 @@ html_content = """<!DOCTYPE html>
         }
       },
       {
-        id: 2,
-        sbd: "2010-02",
-        name: "Trần Thùy Dương",
-        dept: "Ban Nữ Công & Kế Toán",
-        song: "Mẹ Yêu Con",
-        videoId: "fJ9rUzIMcZQ",
+        id: 2, sbd: "2010-02", name: "Trần Thùy Dương", dept: "Ban Nữ Công & Kế Toán", song: "Mẹ Yêu Con",
+        videoSource: "",
         scores: {
           1: { voice: 38, rhythm: 29, style: 19, emotion: 10 },
           2: { voice: 39, rhythm: 29, style: 20, emotion: 9 },
@@ -652,377 +448,575 @@ html_content = """<!DOCTYPE html>
         }
       },
       {
-        id: 3,
-        sbd: "2010-03",
-        name: "Nguyễn Hồng Ánh",
-        dept: "Khối Kỹ Thuật & Sản Xuất",
-        song: "Cô Gái Vót Chông",
-        videoId: "pUjB5d6kI5c",
+        id: 3, sbd: "2010-03", name: "Nguyễn Hồng Ánh", dept: "Khối Kỹ Thuật", song: "Cô Gái Vót Chông",
+        videoSource: "",
         scores: {
           1: { voice: 34, rhythm: 26, style: 18, emotion: 8 },
           2: { voice: 35, rhythm: 27, style: 17, emotion: 8 },
           3: { voice: 33, rhythm: 25, style: 16, emotion: 7 }
         }
-      },
-      {
-        id: 4,
-        sbd: "2010-04",
-        name: "Phạm Ngọc Bích",
-        dept: "Tổ Công Đoàn Phân Xưởng",
-        song: "Một Thoáng Quê Hương",
-        videoId: "",
-        scores: {
-          1: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
-          2: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
-          3: { voice: 0, rhythm: 0, style: 0, emotion: 0 }
-        }
       }
     ];
 
-    let candidates = JSON.parse(localStorage.getItem('karaoke_2010_db')) || DEFAULT_DATA;
-    let currentPerformingId = candidates[0]?.id || null;
+    let candidates = JSON.parse(localStorage.getItem('karaoke_flexible_db')) || DEFAULT_CANDIDATES;
+    // Map lưu các Blob Object URL khi người dùng upload file MP4 trực tiếp trong phiên làm việc
+    let uploadedMediaMap = {};
+    let currentPerformingId = candidates[0]?.id || 1;
+    let projectorWindowRef = null;
 
-    function saveDB() {
-      localStorage.setItem('karaoke_2010_db', JSON.stringify(candidates));
-      renderAll();
+    // KÊNH ĐỒNG BỘ 2 MÀN HÌNH
+    const channel = new BroadcastChannel('karaoke_dual_screen_sync');
+
+    channel.onmessage = (event) => {
+      if (event.data?.type === 'PROJECTOR_READY') {
+        updateProjectorStatus(true);
+        syncCurrentStateToProjector();
+      } else if (event.data?.type === 'PROJECTOR_CLOSED') {
+        updateProjectorStatus(false);
+      }
+    };
+
+    function updateProjectorStatus(isOnline) {
+      const dot = document.getElementById('projectorIndicator');
+      const txt = document.getElementById('projectorStatusText');
+      if (isOnline) {
+        dot.className = 'status-dot online';
+        txt.innerText = 'Màn hình chiếu: Đã kết nối';
+      } else {
+        dot.className = 'status-dot';
+        txt.innerText = 'Màn hình chiếu: Chưa mở';
+      }
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
-    }
-
-    // EXTRACT YOUTUBE ID
+    // TRÍCH XUẤT VIDEO ID YOUTUBE
     function extractYouTubeId(url) {
       if (!url) return '';
+      if (url.endsWith('.mp4') || url.endsWith('.webm') || url.startsWith('blob:') || url.includes('/')) {
+        if (!url.includes('youtube.com') && !url.includes('youtu.be')) return '';
+      }
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : url.trim();
+      return (match && match[2].length === 11) ? match[2] : (url.length === 11 ? url : '');
     }
 
-    // TAB SWITCHING
-    function switchTab(tabKey) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    // MỞ MÀN HÌNH MÁY CHIẾU KHÔNG LỘ ĐIỂM
+    function openProjectorWindow() {
+      projectorWindowRef = window.open('', 'KaraokeProjectorStage', 'width=1280,height=720,menubar=no,toolbar=no');
+      
+      const projectorHTML = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>MÀN HÌNH MÁY CHIẾU - HỘI THI KARAOKE 20/10</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family: -apple-system, sans-serif; }
+    body { background: #0c0205; color: #fff; overflow: hidden; width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+    .header-bar {
+      background: linear-gradient(90deg, #6e0c15, #9b111e);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #d4af37;
+    }
+    .header-bar h1 {
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+    .content-area { flex: 1; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+    video, iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
 
-      const targetContent = document.getElementById(`tab-${tabKey}`);
-      if (targetContent) targetContent.classList.add('active');
+    .poster-view {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+      width: 100%; height: 100%; background: radial-gradient(circle at center, #6e0c15 0%, #150207 100%); padding: 40px;
+    }
+    .poster-title {
+      font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #bf953f, #fcf6ba, #d4af37);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; text-transform: uppercase;
+    }
+    .poster-now {
+      background: rgba(0,0,0,0.55); border: 2px solid #d4af37; border-radius: 12px; padding: 24px 50px;
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    }
+    .ranking-view {
+      width: 90%; max-height: 85vh; background: rgba(35, 12, 22, 0.95); border: 2px solid #d4af37;
+      border-radius: 14px; padding: 24px; overflow-y: auto;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #6e0c15; color: #f9e79f; padding: 14px; font-size: 1.1rem; border-bottom: 2px solid #d4af37; }
+    td { padding: 12px; border-bottom: 1px solid rgba(212,175,55,0.2); font-size: 1.1rem; }
+    .top1 { background: rgba(255, 215, 0, 0.15); font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <h1>Hội Thi Karaoke Chào Mừng 20/10</h1>
+    <div id="pHeaderSinger" style="color:#f9e79f; font-weight:600; font-size:1.1rem;">Đang sẵn sàng</div>
+  </div>
 
-      const buttons = document.querySelectorAll('.tab-btn');
-      if (tabKey === 'stage') buttons[0].classList.add('active');
-      if (tabKey === 'judge') buttons[1].classList.add('active');
-      if (tabKey === 'ranking') buttons[2].classList.add('active');
-      if (tabKey === 'admin') buttons[3].classList.add('active');
+  <div class="content-area" id="pContentArea">
+    <div class="poster-view">
+      <div class="poster-title">HỘI THI KARAOKE 20/10</div>
+      <div style="font-size:1.8rem; color:#ffd1dc; margin-bottom:24px;">CHÀO MỪNG NGÀY PHỤ NỮ VIỆT NAM</div>
+      <div class="poster-now">
+        <div style="font-size:1.1rem; color:#ffd1dc; margin-bottom:6px;">TIẾT MỤC TIẾP THEO</div>
+        <div id="pSongTitle" style="font-size:2.2rem; font-weight:bold; color:#f9e79f; margin-bottom:6px;">Sân Khấu Văn Nghệ</div>
+        <div id="pSingerName" style="font-size:1.5rem; color:#fff;">Đang chuẩn bị</div>
+      </div>
+    </div>
+  </div>
 
-      if (tabKey === 'judge') {
-        loadScoreForCurrentJudge();
+  <script>
+    const subChannel = new BroadcastChannel('karaoke_dual_screen_sync');
+    subChannel.postMessage({ type: 'PROJECTOR_READY' });
+
+    window.addEventListener('beforeunload', () => {
+      subChannel.postMessage({ type: 'PROJECTOR_CLOSED' });
+    });
+
+    subChannel.onmessage = (e) => {
+      const msg = e.data;
+      if (!msg) return;
+
+      if (msg.action === 'PLAY_MEDIA') {
+        playMediaOnProjector(msg.mediaType, msg.mediaSrc, msg.title);
+      } else if (msg.action === 'SHOW_POSTER') {
+        showPosterOnProjector(msg.singer, msg.song);
+      } else if (msg.action === 'SHOW_RANKING') {
+        showRankingOnProjector(msg.rankingList);
+      }
+    };
+
+    function playMediaOnProjector(type, src, title) {
+      document.getElementById('pHeaderSinger').innerText = title || 'Đang biểu diễn';
+      const container = document.getElementById('pContentArea');
+      if (type === 'video') {
+        container.innerHTML = \`<video src="\${src}" controls autoplay playsinline style="width:100%; height:100%; object-fit:contain;"></video>\`;
+      } else if (type === 'youtube') {
+        container.innerHTML = \`<iframe src="https://www.youtube-nocookie.com/embed/\${src}?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>\`;
       }
     }
 
-    // PLAYER CONTROLS
-    function loadSongToPlayer(videoId, songTitle) {
-      const cleanId = extractYouTubeId(videoId);
-      if (cleanId) {
-        document.getElementById('karaokePlayer').src = `https://www.youtube.com/embed/${cleanId}?autoplay=1`;
-        document.getElementById('playingSongLabel').innerText = songTitle ? `Đang phát: ${songTitle}` : `ID: ${cleanId}`;
-      } else {
-        alert("Thí sinh này chưa cài sẵn link YouTube. Vui lòng dán link bên dưới!");
-      }
+    function showPosterOnProjector(singer, song) {
+      document.getElementById('pHeaderSinger').innerText = 'Sân Khấu Văn Nghệ';
+      document.getElementById('pContentArea').innerHTML = \`
+        <div class="poster-view">
+          <div class="poster-title">HỘI THI KARAOKE 20/10</div>
+          <div style="font-size:1.8rem; color:#ffd1dc; margin-bottom:24px;">CHÀO MỪNG NGÀY PHỤ NỮ VIỆT NAM</div>
+          <div class="poster-now">
+            <div style="font-size:1.1rem; color:#ffd1dc; margin-bottom:6px;">TIẾT MỤC BIỂU DIỄN</div>
+            <div style="font-size:2.2rem; font-weight:bold; color:#f9e79f; margin-bottom:6px;">\${song || 'Đang chuẩn bị'}</div>
+            <div style="font-size:1.5rem; color:#fff;">Thí sinh: <strong>\${singer || '--'}</strong></div>
+          </div>
+        </div>
+      \`;
     }
 
-    function loadCustomSong() {
-      const val = document.getElementById('customYoutubeUrl').value;
-      const cleanId = extractYouTubeId(val);
-      if (cleanId) {
-        loadSongToPlayer(cleanId, "Theo yêu cầu");
-        document.getElementById('customYoutubeUrl').value = '';
-      } else {
-        alert("Vui lòng nhập đường link hoặc ID video YouTube hợp lệ!");
-      }
+    function showRankingOnProjector(list) {
+      document.getElementById('pHeaderSinger').innerText = 'BẢNG VINH DANH CHUNG CUỘC';
+      let rows = (list || []).map((c, i) => \`
+        <tr class="\${i === 0 ? 'top1' : ''}">
+          <td style="text-align:center; font-weight:bold; color:#f9e79f;">\${i+1}</td>
+          <td><strong>\${c.sbd}</strong></td>
+          <td>\${c.name}</td>
+          <td>\${c.song}</td>
+          <td>\${c.dept}</td>
+          <td style="text-align:center; font-weight:bold; color:#ffd700; font-size:1.3rem;">\${c.avg > 0 ? c.avg.toFixed(2) : '-'}</td>
+        </tr>
+      \`).join('');
+
+      document.getElementById('pContentArea').innerHTML = \`
+        <div class="ranking-view">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">Hạng</th>
+                <th>SBD</th>
+                <th>Họ và Tên</th>
+                <th>Bài Hát</th>
+                <th>Đơn Vị</th>
+                <th>Điểm TB</th>
+              </tr>
+            </thead>
+            <tbody>\${rows}</tbody>
+          </table>
+        </div>
+      \`;
+    }
+  <\/script>
+</body>
+</html>`;
+
+      projectorWindowRef.document.open();
+      projectorWindowRef.document.write(projectorHTML);
+      projectorWindowRef.document.close();
+      updateProjectorStatus(true);
+      showToast('Đã mở cửa sổ máy chiếu! Hãy kéo sang màn hình máy chiếu.');
     }
 
-    function setPerformingCandidate(id) {
-      currentPerformingId = id;
-      const cand = candidates.find(c => c.id === id);
-      if (cand) {
-        document.getElementById('stageCandName').innerText = `${cand.sbd} - ${cand.name}`;
-        document.getElementById('stageCandSong').innerText = `Bài hát: ${cand.song}`;
-        document.getElementById('stageCandDept').innerText = `Đơn vị: ${cand.dept}`;
+    // PHÁT NGUỒN MEDIA TỔNG QUÁT (TỰ NHẬN MP4 HOẶC YOUTUBE)
+    function playMediaSource(source, titleText) {
+      const vid = document.getElementById('laptopVideo');
+      const yt = document.getElementById('laptopYoutube');
+      const emp = document.getElementById('emptyScreen');
 
-        if (cand.videoId) {
-          loadSongToPlayer(cand.videoId, cand.song);
-        }
-        // Đồng bộ luôn sang tab chấm điểm
-        document.getElementById('judgeCandSelect').value = cand.id;
-        loadScoreForCurrentJudge();
-        showToast(`Đã chọn thí sinh: ${cand.name}`);
-      }
-    }
-
-    // TAB GIÁM KHẢO
-    function onJudgeChange() {
-      loadScoreForCurrentJudge();
-    }
-
-    function calculateJudgeTotal() {
-      const v = Number(document.getElementById('scoreVoice').value) || 0;
-      const r = Number(document.getElementById('scoreRhythm').value) || 0;
-      const s = Number(document.getElementById('scoreStyle').value) || 0;
-      const e = Number(document.getElementById('scoreEmotion').value) || 0;
-      const total = v + r + s + e;
-      document.getElementById('judgeTotalScore').innerText = total.toFixed(1);
-    }
-
-    function loadScoreForCurrentJudge() {
-      const candId = Number(document.getElementById('judgeCandSelect').value);
-      const judgeId = document.getElementById('judgeSelector').value;
-      const cand = candidates.find(c => c.id === candId);
-
-      if (!cand) return;
-
-      document.getElementById('judgeCandNameDisplay').innerText = `[${cand.sbd}] ${cand.name}`;
-      document.getElementById('judgeCandDetailDisplay').innerText = `Bài hát: ${cand.song} | Đơn vị: ${cand.dept}`;
-
-      const judgeScore = (cand.scores && cand.scores[judgeId]) ? cand.scores[judgeId] : { voice: 0, rhythm: 0, style: 0, emotion: 0 };
-
-      document.getElementById('scoreVoice').value = judgeScore.voice || 0;
-      document.getElementById('scoreRhythm').value = judgeScore.rhythm || 0;
-      document.getElementById('scoreStyle').value = judgeScore.style || 0;
-      document.getElementById('scoreEmotion').value = judgeScore.emotion || 0;
-
-      calculateJudgeTotal();
-    }
-
-    function saveJudgeScore() {
-      const candId = Number(document.getElementById('judgeCandSelect').value);
-      const judgeId = document.getElementById('judgeSelector').value;
-      const cand = candidates.find(c => c.id === candId);
-
-      if (!cand) return;
-
-      if (!cand.scores) cand.scores = {};
-
-      const v = Math.min(40, Math.max(0, Number(document.getElementById('scoreVoice').value) || 0));
-      const r = Math.min(30, Math.max(0, Number(document.getElementById('scoreRhythm').value) || 0));
-      const s = Math.min(20, Math.max(0, Number(document.getElementById('scoreStyle').value) || 0));
-      const e = Math.min(10, Math.max(0, Number(document.getElementById('scoreEmotion').value) || 0));
-
-      cand.scores[judgeId] = { voice: v, rhythm: r, style: s, emotion: e };
-      saveDB();
-      showToast(`Đã lưu điểm GK ${judgeId} cho ${cand.name}!`);
-    }
-
-    // QUẢN TRỊ THÍ SINH
-    function addCandidate() {
-      const sbd = document.getElementById('adminSbd').value.trim();
-      const name = document.getElementById('adminName').value.trim();
-      const dept = document.getElementById('adminDept').value.trim();
-      const song = document.getElementById('adminSong').value.trim();
-      const video = document.getElementById('adminVideo').value.trim();
-
-      if (!name || !song) {
-        alert("Vui lòng nhập tối thiểu Họ tên và Tên bài hát!");
+      if (!source) {
+        vid.style.display = 'none';
+        yt.style.display = 'none';
+        emp.style.display = 'flex';
+        document.getElementById('playingTitle').innerText = 'Chờ chọn bài';
         return;
       }
 
-      const newCand = {
-        id: Date.now(),
+      emp.style.display = 'none';
+      const ytId = extractYouTubeId(source);
+
+      if (ytId) {
+        // Nguồn YouTube
+        vid.style.display = 'none';
+        vid.pause();
+        yt.style.display = 'block';
+        yt.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`;
+        document.getElementById('playingTitle').innerText = titleText || `YouTube: ${ytId}`;
+
+        channel.postMessage({
+          action: 'PLAY_MEDIA',
+          mediaType: 'youtube',
+          mediaSrc: ytId,
+          title: titleText
+        });
+      } else {
+        // Nguồn Video MP4 (file upload blob:... hoặc file nằm trên github 'bai1.mp4')
+        yt.style.display = 'none';
+        yt.src = '';
+        vid.style.display = 'block';
+        vid.src = source;
+        vid.play().catch(e => console.log('Auto play paused:', e));
+        document.getElementById('playingTitle').innerText = titleText || 'Phát Video MP4';
+
+        channel.postMessage({
+          action: 'PLAY_MEDIA',
+          mediaType: 'video',
+          mediaSrc: source,
+          title: titleText
+        });
+      }
+    }
+
+    // XỬ LÝ UPLOAD TRỰC TIẾP TỪ NÚT UPLOAD Ở TAB SÂN KHẤU
+    function handleDirectUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const blobUrl = URL.createObjectURL(file);
+      playMediaSource(blobUrl, `File máy: ${file.name}`);
+      showToast(`Đang phát video: ${file.name}`);
+    }
+
+    // XỬ LÝ NHẬP LINK HOẶC TÊN FILE THỦ CÔNG
+    function handleManualPlay() {
+      const val = document.getElementById('manualInputUrl').value.trim();
+      if (!val) return alert('Vui lòng nhập Link YouTube hoặc tên file MP4!');
+      playMediaSource(val, `Phát thủ công: ${val}`);
+      document.getElementById('manualInputUrl').value = '';
+    }
+
+    // CHỌN THÍ SINH LÊN SÂN KHẤU
+    function setCandidateToPerform(id) {
+      currentPerformingId = id;
+      const cand = candidates.find(c => c.id === id);
+      if (!cand) return;
+
+      document.getElementById('currentCandName').innerText = `[${cand.sbd}] ${cand.name}`;
+      document.getElementById('currentCandSong').innerText = `Bài hát: ${cand.song}`;
+      document.getElementById('currentCandDept').innerText = `Đơn vị: ${cand.dept}`;
+
+      // Ưu tiên video MP4 đã upload riêng -> sau đó tới videoSource được cấu hình
+      const source = uploadedMediaMap[cand.id] || cand.videoSource;
+
+      if (source) {
+        playMediaSource(source, `[${cand.sbd}] ${cand.name} - ${cand.song}`);
+      } else {
+        // Nếu thí sinh chưa có video thì hiện Poster chờ
+        document.getElementById('laptopVideo').style.display = 'none';
+        document.getElementById('laptopYoutube').style.display = 'none';
+        document.getElementById('emptyScreen').style.display = 'flex';
+        document.getElementById('playingTitle').innerText = `Chờ phát: ${cand.song}`;
+
+        channel.postMessage({
+          action: 'SHOW_POSTER',
+          singer: `[${cand.sbd}] ${cand.name}`,
+          song: cand.song
+        });
+        showToast('Thí sinh chưa có video. Bạn có thể bấm nút "Tải Lên Video MP4" để chọn file!');
+      }
+
+      document.getElementById('judgeCand').value = cand.id;
+      loadScoreForSelectedCand();
+    }
+
+    function sendProjectorCommand(cmd) {
+      const cand = candidates.find(c => c.id === currentPerformingId);
+      if (cmd === 'MODE_POSTER') {
+        channel.postMessage({
+          action: 'SHOW_POSTER',
+          singer: cand ? `[${cand.sbd}] ${cand.name}` : '',
+          song: cand ? cand.song : ''
+        });
+        showToast('Đang chiếu Banner 20/10 lên máy chiếu!');
+      } else if (cmd === 'MODE_RANKING') {
+        channel.postMessage({
+          action: 'SHOW_RANKING',
+          rankingList: getSortedRankings()
+        });
+        showToast('Đang công bố bảng xếp hạng lên máy chiếu!');
+      }
+    }
+
+    function syncCurrentStateToProjector() {
+      const cand = candidates.find(c => c.id === currentPerformingId);
+      const source = cand ? (uploadedMediaMap[cand.id] || cand.videoSource) : null;
+      if (source) {
+        const ytId = extractYouTubeId(source);
+        channel.postMessage({
+          action: 'PLAY_MEDIA',
+          mediaType: ytId ? 'youtube' : 'video',
+          mediaSrc: ytId || source,
+          title: `[${cand.sbd}] ${cand.name} - ${cand.song}`
+        });
+      } else if (cand) {
+        channel.postMessage({
+          action: 'SHOW_POSTER',
+          singer: `[${cand.sbd}] ${cand.name}`,
+          song: cand.song
+        });
+      }
+    }
+
+    // CHẤM ĐIỂM
+    function calcTotalScore() {
+      const v = Number(document.getElementById('scVoice').value) || 0;
+      const r = Number(document.getElementById('scRhythm').value) || 0;
+      const s = Number(document.getElementById('scStyle').value) || 0;
+      const e = Number(document.getElementById('scEmotion').value) || 0;
+      document.getElementById('judgeSumScore').innerText = (v + r + s + e).toFixed(1);
+    }
+
+    function onJudgeSwitch() { loadScoreForSelectedCand(); }
+    function onJudgeCandChange() { loadScoreForSelectedCand(); }
+
+    function loadScoreForSelectedCand() {
+      const candId = Number(document.getElementById('judgeCand').value);
+      const jNum = document.getElementById('judgeNum').value;
+      const cand = candidates.find(c => c.id === candId);
+      if (!cand) return;
+
+      const score = (cand.scores && cand.scores[jNum]) ? cand.scores[jNum] : { voice: 0, rhythm: 0, style: 0, emotion: 0 };
+      document.getElementById('scVoice').value = score.voice || 0;
+      document.getElementById('scRhythm').value = score.rhythm || 0;
+      document.getElementById('scStyle').value = score.style || 0;
+      document.getElementById('scEmotion').value = score.emotion || 0;
+      calcTotalScore();
+    }
+
+    function saveScore() {
+      const candId = Number(document.getElementById('judgeCand').value);
+      const jNum = document.getElementById('judgeNum').value;
+      const cand = candidates.find(c => c.id === candId);
+      if (!cand) return;
+
+      if (!cand.scores) cand.scores = {};
+      cand.scores[jNum] = {
+        voice: Number(document.getElementById('scVoice').value) || 0,
+        rhythm: Number(document.getElementById('scRhythm').value) || 0,
+        style: Number(document.getElementById('scStyle').value) || 0,
+        emotion: Number(document.getElementById('scEmotion').value) || 0
+      };
+      saveData();
+      showToast(`Đã lưu bí mật điểm GK ${jNum} cho ${cand.name}!`);
+    }
+
+    function getCandidateAvg(cand) {
+      let g1 = (cand.scores?.[1]?.voice || 0) + (cand.scores?.[1]?.rhythm || 0) + (cand.scores?.[1]?.style || 0) + (cand.scores?.[1]?.emotion || 0);
+      let g2 = (cand.scores?.[2]?.voice || 0) + (cand.scores?.[2]?.rhythm || 0) + (cand.scores?.[2]?.style || 0) + (cand.scores?.[2]?.emotion || 0);
+      let g3 = (cand.scores?.[3]?.voice || 0) + (cand.scores?.[3]?.rhythm || 0) + (cand.scores?.[3]?.style || 0) + (cand.scores?.[3]?.emotion || 0);
+      let list = [g1, g2, g3].filter(x => x > 0);
+      return { g1, g2, g3, avg: list.length > 0 ? (list.reduce((a,b)=>a+b,0)/list.length) : 0 };
+    }
+
+    function getSortedRankings() {
+      return [...candidates].map(c => ({ ...c, ...getCandidateAvg(c) })).sort((a,b) => b.avg - a.avg);
+    }
+
+    function exportCSV() {
+      let csv = "\uFEFFHạng,SBD,Họ và Tên,Đơn Vị,Bài Hát,GK 1,GK 2,GK 3,Điểm TB\n";
+      getSortedRankings().forEach((c, idx) => {
+        csv += `"${idx+1}","${c.sbd}","${c.name}","${c.dept}","${c.song}","${c.g1}","${c.g2}","${c.g3}","${c.avg.toFixed(2)}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Bang_Diem_Karaoke_2010.csv`;
+      a.click();
+    }
+
+    // UPLOAD VIDEO MP4 TRỰC TIẾP CHO THÍ SINH TẠI DANH SÁCH
+    function assignFileToCand(id, event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      uploadedMediaMap[id] = URL.createObjectURL(file);
+      showToast(`Đã nạp video ${file.name} cho thí sinh!`);
+      renderUI();
+    }
+
+    function addNewCandidate() {
+      const sbd = document.getElementById('newSbd').value.trim();
+      const name = document.getElementById('newName').value.trim();
+      const dept = document.getElementById('newDept').value.trim();
+      const song = document.getElementById('newSong').value.trim();
+      const mp4File = document.getElementById('newCandMp4').files[0];
+      const videoSource = document.getElementById('newVideoSource').value.trim();
+
+      if (!name || !song) return alert("Vui lòng điền Họ tên và Tên bài hát!");
+
+      const newId = Date.now();
+      if (mp4File) {
+        uploadedMediaMap[newId] = URL.createObjectURL(mp4File);
+      }
+
+      candidates.push({
+        id: newId,
         sbd: sbd || `SBD-${candidates.length + 1}`,
         name,
-        dept: dept || "Đơn vị tự do",
+        dept: dept || "Tự do",
         song,
-        videoId: extractYouTubeId(video),
+        videoSource: videoSource || "",
         scores: {
           1: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
           2: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
           3: { voice: 0, rhythm: 0, style: 0, emotion: 0 }
         }
-      };
-
-      candidates.push(newCand);
-      saveDB();
-
-      document.getElementById('adminSbd').value = '';
-      document.getElementById('adminName').value = '';
-      document.getElementById('adminDept').value = '';
-      document.getElementById('adminSong').value = '';
-      document.getElementById('adminVideo').value = '';
-
-      showToast(`Đã thêm thí sinh: ${name}`);
-    }
-
-    function deleteCandidate(id) {
-      const cand = candidates.find(c => c.id === id);
-      if (confirm(`Bạn có chắc chắn muốn xóa thí sinh "${cand.name}"?`)) {
-        candidates = candidates.filter(c => c.id !== id);
-        saveDB();
-        showToast("Đã xóa thí sinh thành công!");
-      }
-    }
-
-    function resetToDefaultData() {
-      if (confirm("Thao tác này sẽ khôi phục danh sách thi về danh sách mẫu ban đầu! Bạn có chắc không?")) {
-        candidates = JSON.parse(JSON.stringify(DEFAULT_DATA));
-        saveDB();
-        showToast("Đã khôi phục dữ liệu ban đầu!");
-      }
-    }
-
-    // SAO LƯU & PHỤC HỒI JSON
-    function exportJSONBackup() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(candidates, null, 2));
-      const dlAnchor = document.createElement('a');
-      dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `Karaoke_2010_Data_${new Date().toISOString().slice(0,10)}.json`);
-      dlAnchor.click();
-    }
-
-    function importJSONBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if (Array.isArray(parsed)) {
-            candidates = parsed;
-            saveDB();
-            showToast("Phục hồi dữ liệu JSON thành công!");
-          } else {
-            alert("File không đúng cấu trúc danh sách thí sinh!");
-          }
-        } catch(err) {
-          alert("Lỗi khi đọc file JSON!");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    // TÍNH ĐIỂM & XUẤT CSV
-    function getCandidateScoreInfo(cand) {
-      let g1 = 0, g2 = 0, g3 = 0;
-      if (cand.scores && cand.scores[1]) g1 = cand.scores[1].voice + cand.scores[1].rhythm + cand.scores[1].style + cand.scores[1].emotion;
-      if (cand.scores && cand.scores[2]) g2 = cand.scores[2].voice + cand.scores[2].rhythm + cand.scores[2].style + cand.scores[2].emotion;
-      if (cand.scores && cand.scores[3]) g3 = cand.scores[3].voice + cand.scores[3].rhythm + cand.scores[3].style + cand.scores[3].emotion;
-
-      // Tính điểm trung bình các giám khảo đã chấm (> 0)
-      let list = [g1, g2, g3].filter(v => v > 0);
-      let avg = list.length > 0 ? (list.reduce((a, b) => a + b, 0) / list.length) : 0;
-
-      return { g1, g2, g3, avg };
-    }
-
-    function exportToCSV() {
-      let csvContent = "\uFEFF"; // UTF-8 BOM
-      csvContent += "Hạng,Số Báo Danh,Họ và Tên,Đơn Vị,Bài Hát,GK 1,GK 2,GK 3,Điểm Trung Bình\\n";
-
-      const sorted = [...candidates].map(c => {
-        const sc = getCandidateScoreInfo(c);
-        return { ...c, ...sc };
-      }).sort((a, b) => b.avg - a.avg);
-
-      sorted.forEach((c, index) => {
-        csvContent += `"${index + 1}","${c.sbd}","${c.name}","${c.dept}","${c.song}","${c.g1}","${c.g2}","${c.g3}","${c.avg.toFixed(2)}"\\n`;
       });
 
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Bang_Diem_Karaoke_2010.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      saveData();
+      document.getElementById('newSbd').value = '';
+      document.getElementById('newName').value = '';
+      document.getElementById('newDept').value = '';
+      document.getElementById('newSong').value = '';
+      document.getElementById('newCandMp4').value = '';
+      document.getElementById('newVideoSource').value = '';
+      showToast(`Đã thêm thí sinh ${name}!`);
     }
 
-    // RENDER GIAO DIỆN
-    function renderAll() {
-      // 1. Render Sân khấu Queue
-      const queueContainer = document.getElementById('stageQueue');
-      queueContainer.innerHTML = candidates.map(c => `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; border:1px solid rgba(212,175,55,0.15);">
-          <div>
-            <strong style="color:var(--gold-light)">[${c.sbd}] ${c.name}</strong><br>
-            <span style="font-size:0.8rem; color:var(--text-muted)">${c.song} • ${c.dept}</span>
+    function deleteCand(id) {
+      if (confirm('Xóa thí sinh này?')) {
+        candidates = candidates.filter(c => c.id !== id);
+        delete uploadedMediaMap[id];
+        saveData();
+      }
+    }
+
+    function resetDefaults() {
+      if (confirm('Khôi phục về danh sách mẫu ban đầu?')) {
+        candidates = JSON.parse(JSON.stringify(DEFAULT_CANDIDATES));
+        uploadedMediaMap = {};
+        saveData();
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('karaoke_flexible_db', JSON.stringify(candidates));
+      renderUI();
+    }
+
+    function switchTab(k) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${k}`).classList.add('active');
+      const idx = ['stage','judge','ranking','admin'].indexOf(k);
+      if (idx !== -1) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+      if (k === 'judge') loadScoreForSelectedCand();
+    }
+
+    function showToast(m) {
+      const t = document.getElementById('toast');
+      t.innerText = m;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function renderUI() {
+      document.getElementById('stageQueue').innerHTML = candidates.map(c => {
+        const hasMedia = uploadedMediaMap[c.id] || c.videoSource;
+        return `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; border:1px solid rgba(212,175,55,0.15);">
+            <div>
+              <strong style="color:var(--gold-light)">[${c.sbd}] ${c.name}</strong><br>
+              <span style="font-size:0.8rem; color:var(--text-muted)">${c.song} • ${c.dept}</span>
+              ${hasMedia ? '<span style="color:#00e676; font-size:0.75rem; margin-left:6px;">● Sẵn sàng video</span>' : ''}
+            </div>
+            <button class="btn btn-rose btn-sm" onclick="setCandidateToPerform(${c.id})">Lên Hát</button>
           </div>
-          <button class="btn btn-rose btn-sm" onclick="setPerformingCandidate(${c.id})">Lên Hát</button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
-      // Cập nhật thẻ hiển thị thí sinh đang diễn
-      const curr = candidates.find(c => c.id === currentPerformingId) || candidates[0];
-      if (curr) {
-        document.getElementById('stageCandName').innerText = `[${curr.sbd}] ${curr.name}`;
-        document.getElementById('stageCandSong').innerText = `Bài hát: ${curr.song}`;
-        document.getElementById('stageCandDept').innerText = `Đơn vị: ${curr.dept}`;
-      }
+      const sel = document.getElementById('judgeCand');
+      const cur = sel.value;
+      sel.innerHTML = candidates.map(c => `<option value="${c.id}">[${c.sbd}] ${c.name} - ${c.song}</option>`).join('');
+      if (cur && candidates.some(c => c.id == cur)) sel.value = cur;
 
-      // 2. Render Judge select options
-      const judgeSelect = document.getElementById('judgeCandSelect');
-      const prevVal = judgeSelect.value;
-      judgeSelect.innerHTML = candidates.map(c => `
-        <option value="${c.id}">[${c.sbd}] ${c.name} - ${c.song}</option>
-      `).join('');
-      if (prevVal && candidates.some(c => c.id == prevVal)) {
-        judgeSelect.value = prevVal;
-      } else if (curr) {
-        judgeSelect.value = curr.id;
-      }
-
-      // 3. Render Bảng Xếp Hạng
-      const rankingBody = document.getElementById('rankingTableBody');
-      const sorted = [...candidates].map(c => {
-        const sc = getCandidateScoreInfo(c);
-        return { ...c, ...sc };
-      }).sort((a, b) => b.avg - a.avg);
-
-      rankingBody.innerHTML = sorted.map((c, idx) => {
-        let badgeClass = 'badge-rank-other';
-        if (idx === 0 && c.avg > 0) badgeClass = 'badge-rank-1';
-        else if (idx === 1 && c.avg > 0) badgeClass = 'badge-rank-2';
-        else if (idx === 2 && c.avg > 0) badgeClass = 'badge-rank-3';
+      const sorted = getSortedRankings();
+      document.getElementById('rankingTable').innerHTML = sorted.map((c, i) => {
+        let bClass = 'badge-other';
+        if (i === 0 && c.avg > 0) bClass = 'badge-rank-1';
+        else if (i === 1 && c.avg > 0) bClass = 'badge-rank-2';
+        else if (i === 2 && c.avg > 0) bClass = 'badge-rank-3';
 
         return `
           <tr>
-            <td style="text-align: center;"><span class="badge ${badgeClass}">${idx + 1}</span></td>
+            <td style="text-align:center;"><span class="badge ${bClass}">${i+1}</span></td>
             <td><strong>${c.sbd}</strong></td>
             <td style="color:#fff; font-weight:600;">${c.name}</td>
             <td style="color:var(--text-muted); font-size:0.85rem;">${c.dept}</td>
             <td>${c.song}</td>
-            <td style="text-align: center; color:var(--text-muted);">${c.g1 || '-'}</td>
-            <td style="text-align: center; color:var(--text-muted);">${c.g2 || '-'}</td>
-            <td style="text-align: center; color:var(--text-muted);">${c.g3 || '-'}</td>
-            <td style="text-align: center; font-size:1.1rem; font-weight:800; color:var(--gold);">${c.avg > 0 ? c.avg.toFixed(2) : 'Chờ chấm'}</td>
+            <td style="text-align:center;">${c.g1 || '-'}</td>
+            <td style="text-align:center;">${c.g2 || '-'}</td>
+            <td style="text-align:center;">${c.g3 || '-'}</td>
+            <td style="text-align:center; font-weight:800; color:var(--gold); font-size:1.15rem;">${c.avg > 0 ? c.avg.toFixed(2) : 'Chờ chấm'}</td>
           </tr>
         `;
       }).join('');
 
-      // 4. Render Admin List
-      const adminList = document.getElementById('adminCandidatesList');
-      adminList.innerHTML = candidates.map(c => `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.35); padding:10px 14px; border-radius:6px; border:1px solid rgba(212,175,55,0.2);">
+      document.getElementById('adminCandList').innerHTML = candidates.map(c => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; border:1px solid rgba(212,175,55,0.2);">
           <div>
             <strong style="color:var(--gold-light)">[${c.sbd}] ${c.name}</strong> - <span>${c.song}</span><br>
-            <span style="font-size:0.8rem; color:var(--text-muted);">${c.dept} | Video: ${c.videoId || 'Chưa gắn'}</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">${c.dept} | Nguồn: ${uploadedMediaMap[c.id] ? 'Đã nạp file máy' : (c.videoSource || 'Chưa gắn')}</span>
           </div>
-          <button class="btn btn-danger btn-sm" onclick="deleteCandidate(${c.id})">Xóa</button>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer;">
+              ${uploadedMediaMap[c.id] ? 'Đổi File' : 'Chọn File MP4'}
+              <input type="file" accept="video/mp4,video/webm" style="display:none;" onchange="assignFileToCand(${c.id}, event)">
+            </label>
+            <button class="btn btn-danger btn-sm" onclick="deleteCand(${c.id})">Xóa</button>
+          </div>
         </div>
       `).join('');
     }
 
-    // KHỞI ĐỘNG HỆ THỐNG
     window.addEventListener('DOMContentLoaded', () => {
-      renderAll();
-      loadScoreForCurrentJudge();
+      renderUI();
+      setCandidateToPerform(currentPerformingId);
     });
   </script>
 </body>
 </html>
 """
 
-with open("hoi-thi-karaoke-20-10.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_all_in_one)
 
-print("HTML generated successfully.")
+print("Generated index.html successfully.")
