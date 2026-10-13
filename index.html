@@ -427,11 +427,10 @@ html_all_in_one = """<!DOCTYPE html>
   <div id="toast">Thông báo</div>
 
   <script>
-    // Dữ liệu ban đầu
     const DEFAULT_CANDIDATES = [
       {
         id: 1, sbd: "2010-01", name: "Lê Thị Mai Hương", dept: "Khối Văn Phòng", song: "Huyền Thoại Mẹ",
-        videoSource: "fJ9rUzIMcZQ", // Có thể là YouTube ID hoặc tên file mp4 như 'bai1.mp4'
+        videoSource: "fJ9rUzIMcZQ",
         scores: {
           1: { voice: 36, rhythm: 27, style: 18, emotion: 9 },
           2: { voice: 37, rhythm: 28, style: 19, emotion: 9 },
@@ -459,12 +458,10 @@ html_all_in_one = """<!DOCTYPE html>
     ];
 
     let candidates = JSON.parse(localStorage.getItem('karaoke_flexible_db')) || DEFAULT_CANDIDATES;
-    // Map lưu các Blob Object URL khi người dùng upload file MP4 trực tiếp trong phiên làm việc
     let uploadedMediaMap = {};
     let currentPerformingId = candidates[0]?.id || 1;
     let projectorWindowRef = null;
 
-    // KÊNH ĐỒNG BỘ 2 MÀN HÌNH
     const channel = new BroadcastChannel('karaoke_dual_screen_sync');
 
     channel.onmessage = (event) => {
@@ -488,7 +485,6 @@ html_all_in_one = """<!DOCTYPE html>
       }
     }
 
-    // TRÍCH XUẤT VIDEO ID YOUTUBE
     function extractYouTubeId(url) {
       if (!url) return '';
       if (url.endsWith('.mp4') || url.endsWith('.webm') || url.startsWith('blob:') || url.includes('/')) {
@@ -499,7 +495,6 @@ html_all_in_one = """<!DOCTYPE html>
       return (match && match[2].length === 11) ? match[2] : (url.length === 11 ? url : '');
     }
 
-    // MỞ MÀN HÌNH MÁY CHIẾU KHÔNG LỘ ĐIỂM
     function openProjectorWindow() {
       projectorWindowRef = window.open('', 'KaraokeProjectorStage', 'width=1280,height=720,menubar=no,toolbar=no');
       
@@ -657,7 +652,6 @@ html_all_in_one = """<!DOCTYPE html>
       showToast('Đã mở cửa sổ máy chiếu! Hãy kéo sang màn hình máy chiếu.');
     }
 
-    // PHÁT NGUỒN MEDIA TỔNG QUÁT (TỰ NHẬN MP4 HOẶC YOUTUBE)
     function playMediaSource(source, titleText) {
       const vid = document.getElementById('laptopVideo');
       const yt = document.getElementById('laptopYoutube');
@@ -675,7 +669,6 @@ html_all_in_one = """<!DOCTYPE html>
       const ytId = extractYouTubeId(source);
 
       if (ytId) {
-        // Nguồn YouTube
         vid.style.display = 'none';
         vid.pause();
         yt.style.display = 'block';
@@ -689,7 +682,6 @@ html_all_in_one = """<!DOCTYPE html>
           title: titleText
         });
       } else {
-        // Nguồn Video MP4 (file upload blob:... hoặc file nằm trên github 'bai1.mp4')
         yt.style.display = 'none';
         yt.src = '';
         vid.style.display = 'block';
@@ -706,7 +698,6 @@ html_all_in_one = """<!DOCTYPE html>
       }
     }
 
-    // XỬ LÝ UPLOAD TRỰC TIẾP TỪ NÚT UPLOAD Ở TAB SÂN KHẤU
     function handleDirectUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -716,7 +707,6 @@ html_all_in_one = """<!DOCTYPE html>
       showToast(`Đang phát video: ${file.name}`);
     }
 
-    // XỬ LÝ NHẬP LINK HOẶC TÊN FILE THỦ CÔNG
     function handleManualPlay() {
       const val = document.getElementById('manualInputUrl').value.trim();
       if (!val) return alert('Vui lòng nhập Link YouTube hoặc tên file MP4!');
@@ -724,7 +714,6 @@ html_all_in_one = """<!DOCTYPE html>
       document.getElementById('manualInputUrl').value = '';
     }
 
-    // CHỌN THÍ SINH LÊN SÂN KHẤU
     function setCandidateToPerform(id) {
       currentPerformingId = id;
       const cand = candidates.find(c => c.id === id);
@@ -734,13 +723,11 @@ html_all_in_one = """<!DOCTYPE html>
       document.getElementById('currentCandSong').innerText = `Bài hát: ${cand.song}`;
       document.getElementById('currentCandDept').innerText = `Đơn vị: ${cand.dept}`;
 
-      // Ưu tiên video MP4 đã upload riêng -> sau đó tới videoSource được cấu hình
       const source = uploadedMediaMap[cand.id] || cand.videoSource;
 
       if (source) {
         playMediaSource(source, `[${cand.sbd}] ${cand.name} - ${cand.song}`);
       } else {
-        // Nếu thí sinh chưa có video thì hiện Poster chờ
         document.getElementById('laptopVideo').style.display = 'none';
         document.getElementById('laptopYoutube').style.display = 'none';
         document.getElementById('emptyScreen').style.display = 'flex';
@@ -796,7 +783,6 @@ html_all_in_one = """<!DOCTYPE html>
       }
     }
 
-    // CHẤM ĐIỂM
     function calcTotalScore() {
       const v = Number(document.getElementById('scVoice').value) || 0;
       const r = Number(document.getElementById('scRhythm').value) || 0;
@@ -863,7 +849,6 @@ html_all_in_one = """<!DOCTYPE html>
       a.click();
     }
 
-    // UPLOAD VIDEO MP4 TRỰC TIẾP CHO THÍ SINH TẠI DANH SÁCH
     function assignFileToCand(id, event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1019,4 +1004,4 @@ html_all_in_one = """<!DOCTYPE html>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_all_in_one)
 
-print("Generated index.html successfully.")
+print("index.html updated successfully.")
