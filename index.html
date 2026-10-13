@@ -1,4 +1,4 @@
-html_all_in_one = """<!DOCTYPE html>
+code_updated = """<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -122,7 +122,6 @@ html_all_in_one = """<!DOCTYPE html>
     .grid-2 { display: grid; grid-template-columns: 1fr; gap: 18px; }
     @media(min-width: 900px) { .grid-2 { grid-template-columns: 1.25fr 0.75fr; } }
 
-    /* KHUNG PHÁT ĐA NĂNG (HỖ TRỢ MP4 OFFLINE, TẢI FILE TỪ GITHUB, HOẶC YOUTUBE) */
     .media-box {
       position: relative;
       padding-bottom: 56.25%;
@@ -163,6 +162,7 @@ html_all_in_one = """<!DOCTYPE html>
       font-size: 0.9rem;
       outline: none;
     }
+    input:focus, select:focus { border-color: var(--gold); }
 
     .source-control-bar {
       display: flex;
@@ -224,8 +224,8 @@ html_all_in_one = """<!DOCTYPE html>
 
   <header>
     <div class="banner-text">
-      <h1>HỘI THI KARAOKE CHÀO MỪNG HỌP MẶT, GIAO LƯU KỶ NIỆM 96 NĂM  NGÀY THÀNH LẬP HỘI LIÊN HIỆP PHỤ NỮ VIỆT NAM (20/10/1930-20/10/2026)</h1>
-      <p>CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH • BCH CÔNG ĐOÀN • 2026</p>
+      <h1>HỘI THI KARAOKE 20/10</h1>
+      <p>Hỗ Trợ Video MP4 Upload • Chỉnh Sửa Dữ Liệu • Không Mất Dữ Liệu Đã Chấm</p>
     </div>
 
     <div class="projector-bar">
@@ -252,7 +252,6 @@ html_all_in_one = """<!DOCTYPE html>
             <span id="playingTitle" style="font-size: 0.85rem; color: var(--gold);">Đang chờ bài</span>
           </div>
 
-          <!-- MÀN HÌNH CHÍNH -->
           <div class="media-box" id="mediaBox">
             <video id="laptopVideo" controls playsinline style="display:none;"></video>
             <iframe id="laptopYoutube" src="" style="display:none;" allowfullscreen allow="autoplay"></iframe>
@@ -262,7 +261,6 @@ html_all_in_one = """<!DOCTYPE html>
             </div>
           </div>
 
-          <!-- THANH ĐIỀU KHIỂN & CHỌN NHANH VIDEO -->
           <div class="source-control-bar">
             <label class="btn btn-gold btn-sm" style="cursor:pointer; margin:0;">
               📤 Tải Lên Video MP4 Từ Máy
@@ -388,37 +386,58 @@ html_all_in_one = """<!DOCTYPE html>
       </div>
     </div>
 
-    <!-- TAB 4: QUẢN LÝ -->
+    <!-- TAB 4: QUẢN LÝ (ĐÃ CÓ CHỨC NĂNG SỬA) -->
     <div id="tab-admin" class="tab-content">
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">Thêm Thí Sinh Mới</div>
+          <div class="card-title">
+            <span id="formTitle">Thêm Thí Sinh Mới</span>
+            <button id="cancelEditBtn" class="btn btn-outline btn-sm" style="display:none;" onclick="cancelEditing()">Hủy Sửa</button>
+          </div>
+          
+          <input type="hidden" id="editCandidateId" value="">
+
           <div style="display: flex; flex-direction: column; gap: 10px;">
-            <input type="text" id="newSbd" placeholder="Số báo danh (VD: 2010-05)">
-            <input type="text" id="newName" placeholder="Họ và tên thí sinh">
-            <input type="text" id="newDept" placeholder="Đơn vị / Phòng ban">
-            <input type="text" id="newSong" placeholder="Tên bài hát dự thi">
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Số báo danh (SBD):</label>
+              <input type="text" id="newSbd" placeholder="VD: 2010-05" style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Họ và tên thí sinh:</label>
+              <input type="text" id="newName" placeholder="Họ và tên thí sinh" style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Đơn vị / Phòng ban:</label>
+              <input type="text" id="newDept" placeholder="Đơn vị / Phòng ban" style="width:100%;">
+            </div>
+            <div>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Bài hát dự thi:</label>
+              <input type="text" id="newSong" placeholder="Tên bài hát dự thi" style="width:100%;">
+            </div>
             
             <div style="border: 1px dashed var(--gold); padding: 10px; border-radius: 6px;">
-              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 1: Gán file MP4 từ máy tính cho thí sinh này:</span>
+              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 1: Gán file MP4 từ máy tính cho thí sinh:</span>
               <input type="file" id="newCandMp4" accept="video/mp4,video/webm" style="width:100%; font-size:0.8rem;">
             </div>
 
             <div style="border: 1px dashed rgba(212,175,55,0.4); padding: 10px; border-radius: 6px;">
-              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 2: Hoặc gõ tên file MP4 trên GitHub / Link YouTube:</span>
+              <span style="font-size: 0.8rem; color: var(--gold-light); display:block; margin-bottom:4px;">Cách 2: Hoặc nhập tên file MP4 trên GitHub / Link YouTube:</span>
               <input type="text" id="newVideoSource" placeholder="VD: bai1.mp4 HOẶC link YouTube" style="width:100%; font-size:0.85rem;">
             </div>
 
-            <button class="btn btn-rose" onclick="addNewCandidate()">➕ Lưu Thí Sinh</button>
+            <button id="saveCandidateBtn" class="btn btn-rose" onclick="saveOrUpdateCandidate()">➕ Lưu Thí Sinh</button>
           </div>
         </div>
 
         <div class="card">
           <div class="card-title">
             <span>Danh Sách Thí Sinh Dự Thi</span>
-            <button class="btn btn-danger btn-sm" onclick="resetDefaults()">Cài Lại Mặc Định</button>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-outline btn-sm" onclick="backupData()">Sao Lưu (JSON)</button>
+              <button class="btn btn-danger btn-sm" onclick="resetDefaults()">Cài Lại Mẫu</button>
+            </div>
           </div>
-          <div id="adminCandList" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto;"></div>
+          <div id="adminCandList" style="display: flex; flex-direction: column; gap: 8px; max-height: 440px; overflow-y: auto;"></div>
         </div>
       </div>
     </div>
@@ -457,7 +476,12 @@ html_all_in_one = """<!DOCTYPE html>
       }
     ];
 
-    let candidates = JSON.parse(localStorage.getItem('karaoke_flexible_db')) || DEFAULT_CANDIDATES;
+    // ĐỌC DỮ LIỆU ĐÃ CÓ TRONG LOCALSTORAGE TRƯỚC TIÊN ĐỂ KHÔNG MẤT DỮ LIỆU CŨ
+    let candidates = JSON.parse(localStorage.getItem('karaoke_2010_db')) 
+                  || JSON.parse(localStorage.getItem('karaoke_flexible_db')) 
+                  || JSON.parse(localStorage.getItem('karaoke_projector_db')) 
+                  || DEFAULT_CANDIDATES;
+
     let uploadedMediaMap = {};
     let currentPerformingId = candidates[0]?.id || 1;
     let projectorWindowRef = null;
@@ -849,6 +873,7 @@ html_all_in_one = """<!DOCTYPE html>
       a.click();
     }
 
+    // GÁN FILE NHANH TỪ DANH SÁCH
     function assignFileToCand(id, event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -857,7 +882,44 @@ html_all_in_one = """<!DOCTYPE html>
       renderUI();
     }
 
-    function addNewCandidate() {
+    // CHỨC NĂNG SỬA THÔNG TIN THÍ SINH
+    function startEditCandidate(id) {
+      const cand = candidates.find(c => c.id === id);
+      if (!cand) return;
+
+      document.getElementById('editCandidateId').value = cand.id;
+      document.getElementById('newSbd').value = cand.sbd || '';
+      document.getElementById('newName').value = cand.name || '';
+      document.getElementById('newDept').value = cand.dept || '';
+      document.getElementById('newSong').value = cand.song || '';
+      document.getElementById('newVideoSource').value = cand.videoSource || '';
+
+      document.getElementById('formTitle').innerText = `Sửa Thí Sinh: ${cand.name}`;
+      document.getElementById('saveCandidateBtn').innerText = '💾 Cập Nhật Thông Tin';
+      document.getElementById('saveCandidateBtn').className = 'btn btn-gold';
+      document.getElementById('cancelEditBtn').style.display = 'inline-block';
+
+      // Cuộn lên đầu form sửa
+      document.getElementById('newSbd').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cancelEditing() {
+      document.getElementById('editCandidateId').value = '';
+      document.getElementById('newSbd').value = '';
+      document.getElementById('newName').value = '';
+      document.getElementById('newDept').value = '';
+      document.getElementById('newSong').value = '';
+      document.getElementById('newVideoSource').value = '';
+      document.getElementById('newCandMp4').value = '';
+
+      document.getElementById('formTitle').innerText = 'Thêm Thí Sinh Mới';
+      document.getElementById('saveCandidateBtn').innerText = '➕ Lưu Thí Sinh';
+      document.getElementById('saveCandidateBtn').className = 'btn btn-rose';
+      document.getElementById('cancelEditBtn').style.display = 'none';
+    }
+
+    function saveOrUpdateCandidate() {
+      const editId = document.getElementById('editCandidateId').value;
       const sbd = document.getElementById('newSbd').value.trim();
       const name = document.getElementById('newName').value.trim();
       const dept = document.getElementById('newDept').value.trim();
@@ -865,55 +927,80 @@ html_all_in_one = """<!DOCTYPE html>
       const mp4File = document.getElementById('newCandMp4').files[0];
       const videoSource = document.getElementById('newVideoSource').value.trim();
 
-      if (!name || !song) return alert("Vui lòng điền Họ tên và Tên bài hát!");
+      if (!name || !song) return alert("Vui lòng nhập tối thiểu Họ tên và Tên bài hát!");
 
-      const newId = Date.now();
-      if (mp4File) {
-        uploadedMediaMap[newId] = URL.createObjectURL(mp4File);
-      }
-
-      candidates.push({
-        id: newId,
-        sbd: sbd || `SBD-${candidates.length + 1}`,
-        name,
-        dept: dept || "Tự do",
-        song,
-        videoSource: videoSource || "",
-        scores: {
-          1: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
-          2: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
-          3: { voice: 0, rhythm: 0, style: 0, emotion: 0 }
+      if (editId) {
+        // CẬP NHẬT THÍ SINH ĐANG CÓ (GIỮ NGUYÊN ĐIỂM SỐ ĐÃ CHẤM)
+        const cand = candidates.find(c => c.id == editId);
+        if (cand) {
+          cand.sbd = sbd || cand.sbd;
+          cand.name = name;
+          cand.dept = dept || "Tự do";
+          cand.song = song;
+          if (videoSource) cand.videoSource = videoSource;
+          if (mp4File) {
+            uploadedMediaMap[cand.id] = URL.createObjectURL(mp4File);
+          }
+          saveData();
+          showToast(`Đã cập nhật thông tin cho thí sinh ${name}!`);
+          cancelEditing();
         }
-      });
+      } else {
+        // THÊM MỚI
+        const newId = Date.now();
+        if (mp4File) {
+          uploadedMediaMap[newId] = URL.createObjectURL(mp4File);
+        }
 
-      saveData();
-      document.getElementById('newSbd').value = '';
-      document.getElementById('newName').value = '';
-      document.getElementById('newDept').value = '';
-      document.getElementById('newSong').value = '';
-      document.getElementById('newCandMp4').value = '';
-      document.getElementById('newVideoSource').value = '';
-      showToast(`Đã thêm thí sinh ${name}!`);
+        candidates.push({
+          id: newId,
+          sbd: sbd || `SBD-${candidates.length + 1}`,
+          name,
+          dept: dept || "Tự do",
+          song,
+          videoSource: videoSource || "",
+          scores: {
+            1: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
+            2: { voice: 0, rhythm: 0, style: 0, emotion: 0 },
+            3: { voice: 0, rhythm: 0, style: 0, emotion: 0 }
+          }
+        });
+
+        saveData();
+        cancelEditing();
+        showToast(`Đã thêm thí sinh ${name}!`);
+      }
     }
 
     function deleteCand(id) {
-      if (confirm('Xóa thí sinh này?')) {
+      const cand = candidates.find(c => c.id === id);
+      if (confirm(`Bạn có chắc muốn xóa thí sinh "${cand?.name}"?`)) {
         candidates = candidates.filter(c => c.id !== id);
         delete uploadedMediaMap[id];
         saveData();
+        showToast(`Đã xóa thí sinh!`);
       }
     }
 
     function resetDefaults() {
-      if (confirm('Khôi phục về danh sách mẫu ban đầu?')) {
+      if (confirm('Khôi phục về danh sách mẫu ban đầu? Toàn bộ danh sách hiện tại sẽ bị đặt lại!')) {
         candidates = JSON.parse(JSON.stringify(DEFAULT_CANDIDATES));
         uploadedMediaMap = {};
         saveData();
       }
     }
 
+    function backupData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(candidates, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `Danh_Sach_Thi_Karaoke_2010.json`;
+      a.click();
+    }
+
     function saveData() {
       localStorage.setItem('karaoke_flexible_db', JSON.stringify(candidates));
+      localStorage.setItem('karaoke_2010_db', JSON.stringify(candidates));
       renderUI();
     }
 
@@ -934,6 +1021,7 @@ html_all_in_one = """<!DOCTYPE html>
     }
 
     function renderUI() {
+      // 1. Sân khấu queue
       document.getElementById('stageQueue').innerHTML = candidates.map(c => {
         const hasMedia = uploadedMediaMap[c.id] || c.videoSource;
         return `
@@ -948,11 +1036,13 @@ html_all_in_one = """<!DOCTYPE html>
         `;
       }).join('');
 
+      // 2. Thẻ chọn thí sinh chấm điểm
       const sel = document.getElementById('judgeCand');
       const cur = sel.value;
       sel.innerHTML = candidates.map(c => `<option value="${c.id}">[${c.sbd}] ${c.name} - ${c.song}</option>`).join('');
       if (cur && candidates.some(c => c.id == cur)) sel.value = cur;
 
+      // 3. Bảng xếp hạng
       const sorted = getSortedRankings();
       document.getElementById('rankingTable').innerHTML = sorted.map((c, i) => {
         let bClass = 'badge-other';
@@ -975,13 +1065,15 @@ html_all_in_one = """<!DOCTYPE html>
         `;
       }).join('');
 
+      // 4. Danh sách quản lý có nút SỬA và XÓA
       document.getElementById('adminCandList').innerHTML = candidates.map(c => `
         <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:6px; border:1px solid rgba(212,175,55,0.2);">
-          <div>
+          <div style="flex:1; padding-right:8px;">
             <strong style="color:var(--gold-light)">[${c.sbd}] ${c.name}</strong> - <span>${c.song}</span><br>
             <span style="font-size:0.75rem; color:var(--text-muted);">${c.dept} | Nguồn: ${uploadedMediaMap[c.id] ? 'Đã nạp file máy' : (c.videoSource || 'Chưa gắn')}</span>
           </div>
           <div style="display:flex; gap:6px; align-items:center;">
+            <button class="btn btn-gold btn-sm" onclick="startEditCandidate(${c.id})">✏️ Sửa</button>
             <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer;">
               ${uploadedMediaMap[c.id] ? 'Đổi File' : 'Chọn File MP4'}
               <input type="file" accept="video/mp4,video/webm" style="display:none;" onchange="assignFileToCand(${c.id}, event)">
@@ -1002,6 +1094,6 @@ html_all_in_one = """<!DOCTYPE html>
 """
 
 with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_all_in_one)
+    f.write(code_updated)
 
-print("index.html updated successfully.")
+print("index.html with Edit Candidate functionality created successfully.")
