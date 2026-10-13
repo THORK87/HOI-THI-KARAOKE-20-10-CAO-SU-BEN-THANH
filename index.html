@@ -222,17 +222,28 @@ code_updated = """<!DOCTYPE html>
 </head>
 <body>
 
-  <header>
-    <div class="banner-text">
-      <h1>HỘI THI KARAOKE 20/10</h1>
-      <p>Hỗ Trợ Video MP4 Upload • Chỉnh Sửa Dữ Liệu • Không Mất Dữ Liệu Đã Chấm</p>
+  <header style="background: linear-gradient(180deg, rgba(94, 9, 17, 0.98) 0%, rgba(35, 12, 22, 0.98) 100%); border-bottom: 2px solid var(--gold); padding: 14px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.6);">
+    <!-- HÀNG 1: ĐƠN VỊ CANH TRÁI & NÚT ĐIỀU HÀNH CANH PHẢI -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;">
+      <p style="text-align: left; font-size: 0.92rem; font-weight: 700; color: #f9e79f; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+        CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH • BCH CÔNG ĐOÀN • 2026
+      </p>
+
+      <div class="header-actions">
+        <div class="cloud-status">
+          <span class="status-dot" id="cloudStatusDot"></span>
+          <span id="cloudStatusText">Chế độ: Cục bộ</span>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="syncWithCloud(true)">🔄 Đồng Bộ Ngay</button>
+        <button class="btn btn-gold btn-sm" onclick="openProjectorWindow()">📺 Cửa Sổ Máy Chiếu</button>
+      </div>
     </div>
 
-    <div class="projector-bar">
-      <span class="status-dot" id="projectorIndicator"></span>
-      <span style="font-size: 0.85rem;" id="projectorStatusText">Màn hình chiếu: Chưa mở</span>
-      <button class="btn btn-gold btn-sm" onclick="openProjectorWindow()">📺 Mở Cửa Sổ Máy Chiếu</button>
-    </div>
+    <!-- HÀNG 2: TIÊU ĐỀ CHÍNH CANH GIỮA, CỠ CHỮ LỚN ÁNH KIM -->
+    <h1 style="text-align: center; font-size: 2.1rem; font-weight: 900; line-height: 1.35; text-transform: uppercase; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0;">
+      HỘI THI KARAOKE CHÀO MỪNG HỌP MẶT, GIAO LƯU KỶ NIỆM 96 NĂM<br>
+      NGÀY THÀNH LẬP HỘI LIÊN HIỆP PHỤ NỮ VIỆT NAM (20/10/1930 - 20/10/2026)
+    </h1>
   </header>
 
   <nav class="tabs-nav">
