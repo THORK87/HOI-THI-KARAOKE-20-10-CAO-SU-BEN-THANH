@@ -156,8 +156,8 @@
       border: 2px solid var(--gold);
       background: #000;
     }
-    .media-box video, .media-box iframe {
-      position: absolute; top:0; left:0; width:100%; height:100%; border:none;
+    .media-box video, .media-box iframe, .media-box img {
+      position: absolute; top:0; left:0; width:100%; height:100%; border:none; object-fit: contain;
     }
 
     .btn {
@@ -289,7 +289,7 @@
     <!-- TAB 1: SÂN KHẤU -->
     <div id="tab-stage" class="tab-content active">
 
-      <!-- THANH CHUYỂN CHẾ ĐỘ MÁY CHIẾU NGAY TRÊN ĐẦU -->
+      <!-- THANH CHUYỂN CHẾ ĐỘ MÁY CHIẾU -->
       <div class="projector-switch-bar">
         <span style="font-size: 0.9rem; font-weight: bold; color: var(--gold-light);">
           📺 BỘ ĐIỀU KHIỂN MÀN HÌNH MÁY CHIẾU:
@@ -311,18 +311,23 @@
           <div class="media-box" id="mediaBox">
             <video id="laptopVideo" controls playsinline style="display:none;"></video>
             <iframe id="laptopYoutube" src="" style="display:none;" allowfullscreen allow="autoplay"></iframe>
+            <img id="laptopPosterImg" src="" style="display:none;" alt="Banner Tiết Mục">
             <div id="emptyScreen" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#ffd1dc; text-align:center; padding:16px;">
               <p style="font-size:1.15rem; font-weight:bold; color:var(--gold-light);">SẴN SÀNG BIỂU DIỄN</p>
-              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Bấm "Tải Lên Video MP4" hoặc chọn thí sinh bên phải</p>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Bấm "Tải Lên Video MP4", "Tải Ảnh Banner (JPG)" hoặc chọn tiết mục bên phải</p>
             </div>
           </div>
 
           <div class="source-control-bar">
             <label class="btn btn-gold btn-sm" style="cursor:pointer; margin:0;">
-              📤 Tải Lên Video MP4 Từ Máy
+              📤 Tải Lên Video MP4
               <input type="file" accept="video/mp4,video/webm" style="display:none;" onchange="handleDirectUpload(event)">
             </label>
-            <input type="text" id="manualInputUrl" placeholder="Dán Link YouTube hoặc Video ID..." style="flex:1; min-width:180px;">
+            <label class="btn btn-outline btn-sm" style="cursor:pointer; margin:0; border-color:var(--gold); color:#f9e79f;">
+              🖼️ Tải Ảnh Banner (JPG/PNG)
+              <input type="file" accept="image/jpeg,image/png,image/jpg" style="display:none;" onchange="handleBannerUpload(event)">
+            </label>
+            <input type="text" id="manualInputUrl" placeholder="Dán Link YouTube hoặc Video ID..." style="flex:1; min-width:160px;">
             <button class="btn btn-rose btn-sm" onclick="handleManualPlay()">Phát Bài</button>
           </div>
         </div>
@@ -454,12 +459,12 @@
               <input type="text" id="newSbd" placeholder="VD: 2010-05" style="width:100%;">
             </div>
             <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Họ và tên thí sinh:</label>
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Họ và tên thí sinh / Đội:</label>
               <input type="text" id="newName" placeholder="Họ và tên thí sinh" style="width:100%;">
             </div>
             <div>
-              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Đơn vị / Phòng ban:</label>
-              <input type="text" id="newDept" placeholder="Đơn vị / Phòng ban" style="width:100%;">
+              <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Đơn vị / Tác giả:</label>
+              <input type="text" id="newDept" placeholder="Đơn vị / Tác giả" style="width:100%;">
             </div>
             <div>
               <label style="font-size: 0.8rem; color: var(--text-muted); display:block; margin-bottom: 4px;">Bài hát dự thi:</label>
@@ -521,6 +526,7 @@
                   || DEFAULT_CANDIDATES;
 
     let uploadedMediaMap = {};
+    let customBannerImgUrl = ""; // Lưu ảnh JPG / PNG tải lên làm banner
     let currentPerformingId = candidates[0]?.id || 1;
     let projectorWindowRef = null;
     let currentActiveMedia = { type: 'none', src: '', title: '' };
@@ -536,12 +542,12 @@
     }
 
     // ==========================================
-    // CƠ CHẾ ĐIỀU KHIỂN CỬA SỔ MÁY CHIẾU (3 CHẾ ĐỘ RÕ RÀNG)
+    // CỬA SỔ MÁY CHIẾU (HỖ TRỢ CẢ ẢNH BANNER JPG)
     // ==========================================
     function openProjectorWindow() {
       if (projectorWindowRef && !projectorWindowRef.closed) {
         projectorWindowRef.focus();
-        showToast('Cửa sổ máy chiếu đã được mở!');
+        showToast('Cửa sổ máy chiếu đã mở!');
         return;
       }
 
@@ -576,11 +582,18 @@
     #viewVideo { width: 100%; height: 100%; display: none; background: #000; }
     #viewVideo video, #viewVideo iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
 
-    /* VIEW 2: POSTER BANNER */
+    /* VIEW 2: POSTER BANNER (HỖ TRỢ CẢ ẢNH JPG LẪN TEXT MẶC ĐỊNH) */
     #viewPoster {
       width: 100%; height: 100%; display: flex; flex-direction: column;
       align-items: center; justify-content: center; text-align: center;
-      background: radial-gradient(circle at center, #6e0c15 0%, #150207 100%); padding: 30px;
+      background: radial-gradient(circle at center, #6e0c15 0%, #150207 100%);
+      position: relative;
+    }
+    #posterCustomImg {
+      position: absolute; top:0; left:0; width:100%; height:100%; object-fit: contain; display: none; background:#000;
+    }
+    .poster-content {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px;
     }
     .poster-title {
       font-size: 2.3rem; font-weight: 900; background: linear-gradient(135deg, #bf953f, #fcf6ba, #d4af37);
@@ -616,14 +629,17 @@
     <!-- KHỐI 1: VIDEO -->
     <div id="viewVideo"></div>
 
-    <!-- KHỐI 2: POSTER -->
+    <!-- KHỐI 2: POSTER BANNER (CÓ THẺ ẢNH JPG) -->
     <div id="viewPoster">
-      <div class="poster-title">HỘI THI KARAOKE 20/10</div>
-      <div style="font-size:1.45rem; color:#ffd1dc; margin-bottom:16px;">CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH</div>
-      <div class="poster-box">
-        <div style="font-size:1.05rem; color:#ffd1dc; margin-bottom:6px;">TIẾT MỤC TIẾP THEO</div>
-        <div id="pSongTitle" style="font-size:2.2rem; font-weight:bold; color:#f9e79f; margin-bottom:6px;">Sân Khấu Văn Nghệ</div>
-        <div id="pSingerName" style="font-size:1.45rem; color:#fff;">Đang chuẩn bị</div>
+      <img id="posterCustomImg" src="" alt="Banner Tiết Mục JPG">
+      <div class="poster-content" id="posterDefaultText">
+        <div class="poster-title">HỘI THI KARAOKE 20/10</div>
+        <div style="font-size:1.45rem; color:#ffd1dc; margin-bottom:16px;">CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH</div>
+        <div class="poster-box">
+          <div style="font-size:1.05rem; color:#ffd1dc; margin-bottom:6px;">TIẾT MỤC TIẾP THEO</div>
+          <div id="pSongTitle" style="font-size:2.2rem; font-weight:bold; color:#f9e79f; margin-bottom:6px;">Sân Khấu Văn Nghệ</div>
+          <div id="pSingerName" style="font-size:1.45rem; color:#fff;">Đang chuẩn bị</div>
+        </div>
       </div>
     </div>
 
@@ -655,14 +671,14 @@
 
       document.getElementById('projectorDot').className = 'status-dot online';
       document.getElementById('projectorStatusText').innerText = 'Máy chiếu: Đã bật';
-      showToast('Đã mở cửa sổ máy chiếu! Hãy kéo sang màn hình máy chiếu.');
+      showToast('Đã mở cửa sổ máy chiếu!');
 
       setTimeout(() => {
         setProjectorScreen(currentActiveMedia.type !== 'none' ? 'video' : 'poster');
       }, 500);
     }
 
-    // HÀM CHUYỂN ĐỔI QUA LẠI MÀN HÌNH MÁY CHIẾU (CHẮC CHẮN HOẠT ĐỘNG 100%)
+    // CHUYỂN ĐỔI CHẾ ĐỘ MÁY CHIẾU (VIDEO / POSTER / RANKING)
     function setProjectorScreen(mode) {
       if (!projectorWindowRef || projectorWindowRef.closed) {
         openProjectorWindow();
@@ -675,16 +691,16 @@
         const vPoster = pDoc.getElementById('viewPoster');
         const vRanking = pDoc.getElementById('viewRanking');
         const headerText = pDoc.getElementById('pHeaderSinger');
+        const pImg = pDoc.getElementById('posterCustomImg');
+        const pTxt = pDoc.getElementById('posterDefaultText');
 
         if (!vVideo || !vPoster || !vRanking) return;
 
-        // Ẩn hết cả 3 khối trước
         vVideo.style.display = 'none';
         vPoster.style.display = 'none';
         vRanking.style.display = 'none';
 
         if (mode === 'video') {
-          // BẬT MÀN HÌNH PHÁT VIDEO / YOUTUBE
           if (currentActiveMedia.type === 'youtube') {
             vVideo.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${currentActiveMedia.src}?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
             vVideo.style.display = 'block';
@@ -696,21 +712,30 @@
             headerText.innerText = currentActiveMedia.title || 'Đang biểu diễn';
             showToast('Đã chiếu Video MP4 lên máy chiếu!');
           } else {
-            // Nếu chưa có video thì bật sang poster
             setProjectorScreen('poster');
           }
         } 
         else if (mode === 'poster') {
-          // BẬT BANNER TIẾT MỤC
           const cand = candidates.find(c => c.id === currentPerformingId);
-          pDoc.getElementById('pSongTitle').innerText = cand ? cand.song : 'Chờ biểu diễn';
-          pDoc.getElementById('pSingerName').innerHTML = cand ? `Đội: <strong>${cand.name}</strong>` : '--';
           headerText.innerText = 'Sân Khấu Văn Nghệ';
           vPoster.style.display = 'flex';
-          showToast('Đã chiếu Banner tiết mục lên máy chiếu!');
+
+          // NẾU CÓ ẢNH JPG/PNG BANNER THÌ HIỆN ẢNH JPG
+          if (customBannerImgUrl) {
+            pImg.src = customBannerImgUrl;
+            pImg.style.display = 'block';
+            pTxt.style.display = 'none';
+            showToast('Đã chiếu Ảnh Banner (JPG) lên máy chiếu!');
+          } else {
+            // NẾU KHÔNG CÓ ẢNH THÌ HIỆN TEXT BANNER MẶC ĐỊNH
+            pImg.style.display = 'none';
+            pTxt.style.display = 'flex';
+            pDoc.getElementById('pSongTitle').innerText = cand ? cand.song : 'Chờ biểu diễn';
+            pDoc.getElementById('pSingerName').innerHTML = cand ? `Đội: <strong>${cand.name}</strong>` : '--';
+            showToast('Đã chiếu Banner tiết mục lên máy chiếu!');
+          }
         } 
         else if (mode === 'ranking') {
-          // BẬT BẢNG VINH DANH CHUNG CUỘC
           const sorted = getSortedRankings();
           pDoc.getElementById('pRankingBody').innerHTML = sorted.map((c, i) => `
             <tr class="${i === 0 ? 'top1' : ''}">
@@ -724,20 +749,38 @@
           `).join('');
           headerText.innerText = 'BẢNG VINH DANH CHUNG CUỘC';
           vRanking.style.display = 'flex';
-          showToast('Đang chiếu Bảng Vinh Danh lên máy chiếu!');
+          showToast('Đã chiếu Bảng Vinh Danh lên máy chiếu!');
         }
       } catch (err) {
         console.error('Lỗi khi chuyển đổi màn hình máy chiếu:', err);
       }
     }
 
-    // ==========================================
+    // TẢI ẢNH BANNER JPG / PNG TỪ MÁY
+    function handleBannerUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      customBannerImgUrl = URL.createObjectURL(file);
+      document.getElementById('laptopPosterImg').src = customBannerImgUrl;
+      document.getElementById('laptopPosterImg').style.display = 'block';
+      document.getElementById('laptopVideo').style.display = 'none';
+      document.getElementById('laptopYoutube').style.display = 'none';
+      document.getElementById('emptyScreen').style.display = 'none';
+      document.getElementById('playingTitle').innerText = `Ảnh Banner: ${file.name}`;
+
+      showToast(`Đã nạp ảnh banner: ${file.name}`);
+      setProjectorScreen('poster');
+    }
+
     // PHÁT VIDEO TRÊN MÁY TÍNH & ĐỒNG BỘ MÁY CHIẾU
-    // ==========================================
     function playMediaSource(source, titleText) {
       const vid = document.getElementById('laptopVideo');
       const yt = document.getElementById('laptopYoutube');
+      const img = document.getElementById('laptopPosterImg');
       const emp = document.getElementById('emptyScreen');
+
+      img.style.display = 'none';
 
       if (!source) {
         vid.style.display = 'none';
@@ -769,7 +812,6 @@
         currentActiveMedia = { type: 'video', src: source, title: titleText };
       }
 
-      // Tự động bật màn hình video máy chiếu nếu đang mở
       if (projectorWindowRef && !projectorWindowRef.closed) {
         setProjectorScreen('video');
       }
@@ -818,9 +860,7 @@
       loadScoreForSelectedCand();
     }
 
-    // ==========================================
     // CHẤM ĐIỂM
-    // ==========================================
     function calcTotalScore() {
       const v = Number(document.getElementById('scVoice').value) || 0;
       const r = Number(document.getElementById('scRhythm').value) || 0;
@@ -876,11 +916,9 @@
     }
 
     function exportCSV() {
-      let csv = "﻿Hạng,SBD,Đội Biểu Diễn,Tiết Mục,Tác Giả,GK1 (TGĐ Vũ),GK2 (PTGĐ Tuấn),GK3 (PTGĐ Thẻ),Điểm TB
-";
+      let csv = "\uFEFFHạng,SBD,Đội Biểu Diễn,Tiết Mục,Tác Giả,GK1 (TGĐ Vũ),GK2 (PTGĐ Tuấn),GK3 (PTGĐ Thẻ),Điểm TB\n";
       getSortedRankings().forEach((c, idx) => {
-        csv += `"${idx+1}","${c.sbd}","${c.name}","${c.song}","${c.dept}","${c.g1}","${c.g2}","${c.g3}","${c.avg.toFixed(2)}"
-`;
+        csv += `"${idx+1}","${c.sbd}","${c.name}","${c.song}","${c.dept}","${c.g1}","${c.g2}","${c.g3}","${c.avg.toFixed(2)}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const a = document.createElement('a');
