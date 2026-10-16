@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Điều Hành & Chấm Điểm Karaoke 20/10</title>
+  <title>Điều Hành & Chấm Điểm Karaoke 20/10 - Đồng Bộ Firebase</title>
+  
+  <!-- NHÚNG FIREBASE SDK (V9 COMPAT) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --primary: #9b111e;
@@ -178,7 +183,7 @@
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-sm { padding: 5px 10px; font-size: 0.78rem; }
 
-    input, select {
+    input, select, textarea {
       background: rgba(18, 5, 9, 0.85);
       border: 1px solid rgba(212, 175, 55, 0.4);
       border-radius: 6px;
@@ -187,7 +192,7 @@
       font-size: 0.9rem;
       outline: none;
     }
-    input:focus, select:focus { border-color: var(--gold); }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); }
 
     .source-control-bar {
       display: flex;
@@ -262,13 +267,17 @@
 
   <header>
     <div class="header-top">
-      <p class="company-title">CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH • BCH CÔNG ĐOÀN • 2026</p>
+      <p class="company-title">CÔNG TY CỔ PHẦN CAO SU BẾN THÀNH • BCH CÔNG ĐOÀN</p>
       <div class="header-actions">
+        <div class="status-badge">
+          <span class="status-dot" id="firebaseDot"></span>
+          <span id="firebaseStatusText">Firebase: Chưa cấu hình</span>
+        </div>
         <div class="status-badge">
           <span class="status-dot" id="projectorDot"></span>
           <span id="projectorStatusText">Máy chiếu: Chưa bật</span>
         </div>
-        <button class="btn btn-gold btn-sm" onclick="openProjectorWindow()">📺 Mở Cửa Sổ Máy Chiếu</button>
+        <button class="btn btn-gold btn-sm" onclick="openProjectorWindow()">📺 Mở Màn Hình Máy Chiếu</button>
       </div>
     </div>
 
@@ -280,16 +289,15 @@
 
   <nav class="tabs-nav">
     <button class="tab-btn active" onclick="switchTab('stage')">🎤 Sân Khấu & Video</button>
-    <button class="tab-btn" onclick="switchTab('judge')">📝 Bàn Giám Khảo (Bảo Mật)</button>
+    <button class="tab-btn" onclick="switchTab('judge')">📝 Bàn Giám Khảo (Chấm Điểm)</button>
     <button class="tab-btn" onclick="switchTab('ranking')">🏆 Bảng Xếp Hạng</button>
-    <button class="tab-btn" onclick="switchTab('admin')">⚙️ Quản Lý Thí Sinh & Video</button>
+    <button class="tab-btn" onclick="switchTab('admin')">⚙️ Quản Lý Thí Sinh</button>
+    <button class="tab-btn" onclick="switchTab('cloud')">☁️ Đồng Bộ 3 Giám Khảo</button>
   </nav>
 
   <main>
     <!-- TAB 1: SÂN KHẤU -->
     <div id="tab-stage" class="tab-content active">
-
-      <!-- THANH CHUYỂN CHẾ ĐỘ MÁY CHIẾU -->
       <div class="projector-switch-bar">
         <span style="font-size: 0.9rem; font-weight: bold; color: var(--gold-light);">
           📺 BỘ ĐIỀU KHIỂN MÀN HÌNH MÁY CHIẾU:
@@ -353,13 +361,13 @@
     <div id="tab-judge" class="tab-content">
       <div class="card">
         <div class="card-title">
-          <span>Bàn Giám Khảo Chấm Điểm (Bảo Mật Trên Máy Tính)</span>
+          <span>Bàn Giám Khảo Chấm Điểm</span>
           <span style="font-size: 0.85rem; color: var(--gold);">Thang Điểm 100</span>
         </div>
 
         <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px;">
           <div style="flex: 1; min-width: 220px;">
-            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Giám Khảo:</label>
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Bạn là Giám Khảo nào:</label>
             <select id="judgeNum" onchange="onJudgeSwitch()" style="width: 100%;">
               <option value="1">GK1: TGĐ Nguyễn Trần Nghiêm Vũ (Trưởng Ban)</option>
               <option value="2">GK2: PTGĐ Huỳnh Anh Tuấn</option>
@@ -368,7 +376,7 @@
           </div>
 
           <div style="flex: 1.5; min-width: 260px;">
-            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Thí Sinh Đang Chấm:</label>
+            <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Tiết mục đang chấm:</label>
             <select id="judgeCand" onchange="onJudgeCandChange()" style="width: 100%; font-weight: bold; color: var(--gold);"></select>
           </div>
         </div>
@@ -377,35 +385,35 @@
           <div class="criteria-card">
             <label>1. Giọng hát & Cao độ (Tối đa 40đ)</label>
             <div class="desc">Âm sắc, cao độ, phát âm, nội lực</div>
-            <input type="number" id="scVoice" min="0" max="40" value="35" oninput="calcTotalScore()">
+            <input type="number" id="scVoice" min="0" max="40" value="0" oninput="calcTotalScore()">
           </div>
 
           <div class="criteria-card">
             <label>2. Nhịp phách & Tiết tấu (Tối đa 25đ)</label>
             <div class="desc">Đúng nhịp điệu, tiết tấu, phách chuẩn</div>
-            <input type="number" id="scRhythm" min="0" max="25" value="22" oninput="calcTotalScore()">
+            <input type="number" id="scRhythm" min="0" max="25" value="0" oninput="calcTotalScore()">
           </div>
 
           <div class="criteria-card">
             <label>3. Phong cách & Trang phục (Tối đa 20đ)</label>
             <div class="desc">Tự tin, biểu cảm, trang phục 20/10</div>
-            <input type="number" id="scStyle" min="0" max="20" value="18" oninput="calcTotalScore()">
+            <input type="number" id="scStyle" min="0" max="20" value="0" oninput="calcTotalScore()">
           </div>
 
           <div class="criteria-card">
             <label>4. Cảm xúc & Sáng tạo (Tối đa 15đ)</label>
-            <div class="desc">Truyền tải cảm xúc, tinh tế</div>
-            <input type="number" id="scEmotion" min="0" max="15" value="13" oninput="calcTotalScore()">
+            <div class="desc">Truyền tải cảm xúc, tinh thần hội thi</div>
+            <input type="number" id="scEmotion" min="0" max="15" value="0" oninput="calcTotalScore()">
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 8px; border: 1px dashed var(--gold);">
           <div>
             <span style="font-size: 0.95rem; color: var(--text-muted);">Tổng điểm: </span>
-            <span id="judgeSumScore" style="font-size: 1.6rem; font-weight: 800; color: var(--gold); margin-left: 6px;">88.0</span>
+            <span id="judgeSumScore" style="font-size: 1.6rem; font-weight: 800; color: var(--gold); margin-left: 6px;">0.0</span>
             <span style="font-size: 0.85rem; color: var(--text-muted);"> / 100đ</span>
           </div>
-          <button class="btn btn-gold" onclick="saveScore()">💾 Lưu Điểm Chấm</button>
+          <button class="btn btn-gold" onclick="saveScore()">💾 Lưu Điểm Chấm (Đồng Bộ Lên Cloud)</button>
         </div>
       </div>
     </div>
@@ -414,7 +422,7 @@
     <div id="tab-ranking" class="tab-content">
       <div class="card">
         <div class="card-title">
-          <span>Bảng Xếp Hạng Kết Quả</span>
+          <span>Bảng Xếp Hạng Kết Quả Trực Tiếp</span>
           <div style="display: flex; gap: 8px;">
             <button class="btn btn-rose btn-sm" onclick="setProjectorScreen('ranking')">📺 Chiếu Bảng Này Lên Máy Chiếu</button>
             <button class="btn btn-outline btn-sm" onclick="exportCSV()">📥 Xuất Excel/CSV</button>
@@ -503,6 +511,41 @@
         </div>
       </div>
     </div>
+
+    <!-- TAB 5: CẤU HÌNH CLOUD ĐỒNG BỘ 3 GIÁM KHẢO -->
+    <div id="tab-cloud" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>Cấu Hình Firebase Realtime Database (Đồng Bộ 3 Giám Khảo)</span>
+          <span style="font-size: 0.85rem; color: var(--gold);">Đồng Bộ Trực Tiếp Qua Internet</span>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">
+          Để 3 Giám khảo dùng 3 điện thoại/máy tính cá nhân chấm điểm và tự động hiển thị kết quả về máy chiếu, bạn hãy dán đoạn <strong>firebaseConfig</strong> lấy từ Firebase Console vào khung dưới đây rồi bấm <strong>Lưu & Kết Nối</strong>.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <label style="font-size: 0.85rem; color: var(--gold-light); display:block; margin-bottom: 6px;">Đoạn mã Firebase Config (dạng JSON):</label>
+            <textarea id="firebaseConfigInput" rows="7" style="width: 100%; font-family: monospace; font-size: 0.85rem;" placeholder='{
+  "apiKey": "AIzaSy...",
+  "authDomain": "karaoke-2010.firebaseapp.com",
+  "databaseURL": "https://karaoke-2010-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "karaoke-2010",
+  "storageBucket": "karaoke-2010.appspot.com",
+  "messagingSenderId": "...",
+  "appId": "..."
+}'></textarea>
+          </div>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-gold" onclick="saveAndInitFirebase()">⚡ Lưu & Kết Nối Firebase</button>
+            <button class="btn btn-rose" onclick="pushAllLocalToFirebase()">⬆️ Đẩy Dữ Liệu Máy Này Lên Cloud</button>
+            <button class="btn btn-danger btn-sm" onclick="disconnectFirebase()">Hủy Kết Nối (Dùng Offline)</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <div id="toast">Thông báo</div>
@@ -526,10 +569,15 @@
                   || DEFAULT_CANDIDATES;
 
     let uploadedMediaMap = {};
-    let customBannerImgUrl = ""; // Lưu ảnh JPG / PNG tải lên làm banner
+    let customBannerImgUrl = "";
     let currentPerformingId = candidates[0]?.id || 1;
     let projectorWindowRef = null;
     let currentActiveMedia = { type: 'none', src: '', title: '' };
+
+    // BIẾN QUẢN LÝ FIREBASE
+    let fbApp = null;
+    let fbDb = null;
+    let isFirebaseReady = false;
 
     function extractYouTubeId(url) {
       if (!url) return '';
@@ -542,7 +590,90 @@
     }
 
     // ==========================================
-    // CỬA SỔ MÁY CHIẾU (HỖ TRỢ CẢ ẢNH BANNER JPG)
+    // KHỞI TẠO & LẮNG NGHE ĐỒNG BỘ TỪ FIREBASE
+    // ==========================================
+    function initFirebase() {
+      const savedConfig = localStorage.getItem('karaoke_firebase_config');
+      if (!savedConfig) {
+        setFirebaseStatus(false, 'Chưa cấu hình');
+        return;
+      }
+
+      try {
+        const config = JSON.parse(savedConfig);
+        document.getElementById('firebaseConfigInput').value = JSON.stringify(config, null, 2);
+
+        if (!firebase.apps.length) {
+          fbApp = firebase.initializeApp(config);
+        } else {
+          fbApp = firebase.app();
+        }
+        fbDb = firebase.database();
+        isFirebaseReady = true;
+
+        setFirebaseStatus(true, 'Đã kết nối Online');
+
+        // LẮNG NGHE DỮ LIỆU ĐỔ VỀ TỰ ĐỘNG THEO THỜI GIAN THỰC
+        fbDb.ref('candidates').on('value', snapshot => {
+          const val = snapshot.val();
+          if (val) {
+            candidates = Array.isArray(val) ? val : Object.values(val);
+            localStorage.setItem('karaoke_2010_db', JSON.stringify(candidates));
+            renderUI();
+            if (projectorWindowRef && !projectorWindowRef.closed) {
+              updateProjectorRanking();
+            }
+          }
+        });
+
+      } catch (err) {
+        console.error('Lỗi khởi tạo Firebase:', err);
+        setFirebaseStatus(false, 'Lỗi cấu hình');
+      }
+    }
+
+    function setFirebaseStatus(isOnline, text) {
+      const dot = document.getElementById('firebaseDot');
+      const label = document.getElementById('firebaseStatusText');
+      if (isOnline) {
+        dot.className = 'status-dot online';
+        label.innerText = `Firebase: ${text}`;
+      } else {
+        dot.className = 'status-dot';
+        label.innerText = `Firebase: ${text}`;
+      }
+    }
+
+    function saveAndInitFirebase() {
+      const txt = document.getElementById('firebaseConfigInput').value.trim();
+      if (!txt) return alert('Vui lòng dán đoạn mã JSON cấu hình Firebase!');
+      try {
+        const parsed = JSON.parse(txt);
+        localStorage.setItem('karaoke_firebase_config', JSON.stringify(parsed));
+        location.reload();
+      } catch (e) {
+        alert('Cấu trúc JSON không hợp lệ. Vui lòng kiểm tra lại dấu ngoặc và dấu phẩy!');
+      }
+    }
+
+    function disconnectFirebase() {
+      if (confirm('Bạn muốn hủy kết nối Firebase và chuyển về chế độ Offline?')) {
+        localStorage.removeItem('karaoke_firebase_config');
+        location.reload();
+      }
+    }
+
+    function pushAllLocalToFirebase() {
+      if (!isFirebaseReady) return alert('Chưa kết nối Firebase thành công!');
+      if (confirm('Đẩy toàn bộ danh sách thí sinh và điểm hiện tại từ máy này lên Cloud?')) {
+        fbDb.ref('candidates').set(candidates)
+          .then(() => showToast('Đã đồng bộ toàn bộ dữ liệu lên Cloud thành công!'))
+          .catch(e => alert('Lỗi đẩy dữ liệu: ' + e.message));
+      }
+    }
+
+    // ==========================================
+    // CỬA SỔ MÁY CHIẾU
     // ==========================================
     function openProjectorWindow() {
       if (projectorWindowRef && !projectorWindowRef.closed) {
@@ -578,11 +709,9 @@
     }
     .content-area { flex: 1; position: relative; background: #000; overflow: hidden; }
 
-    /* VIEW 1: VIDEO KARAOKE */
     #viewVideo { width: 100%; height: 100%; display: none; background: #000; }
     #viewVideo video, #viewVideo iframe { width: 100%; height: 100%; border: none; object-fit: contain; }
 
-    /* VIEW 2: POSTER BANNER (HỖ TRỢ CẢ ẢNH JPG LẪN TEXT MẶC ĐỊNH) */
     #viewPoster {
       width: 100%; height: 100%; display: flex; flex-direction: column;
       align-items: center; justify-content: center; text-align: center;
@@ -604,7 +733,6 @@
       box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); margin-top: 10px;
     }
 
-    /* VIEW 3: BẢNG VINH DANH */
     #viewRanking {
       width: 100%; height: 100%; display: none; align-items: center; justify-content: center;
       background: radial-gradient(circle at center, #35101a 0%, #100206 100%); padding: 20px;
@@ -626,10 +754,8 @@
   </div>
 
   <div class="content-area">
-    <!-- KHỐI 1: VIDEO -->
     <div id="viewVideo"></div>
 
-    <!-- KHỐI 2: POSTER BANNER (CÓ THẺ ẢNH JPG) -->
     <div id="viewPoster">
       <img id="posterCustomImg" src="" alt="Banner Tiết Mục JPG">
       <div class="poster-content" id="posterDefaultText">
@@ -643,7 +769,6 @@
       </div>
     </div>
 
-    <!-- KHỐI 3: BẢNG XẾP HẠNG -->
     <div id="viewRanking">
       <div class="ranking-card">
         <table>
@@ -678,7 +803,6 @@
       }, 500);
     }
 
-    // CHUYỂN ĐỔI CHẾ ĐỘ MÁY CHIẾU (VIDEO / POSTER / RANKING)
     function setProjectorScreen(mode) {
       if (!projectorWindowRef || projectorWindowRef.closed) {
         openProjectorWindow();
@@ -705,12 +829,10 @@
             vVideo.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${currentActiveMedia.src}?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
             vVideo.style.display = 'block';
             headerText.innerText = currentActiveMedia.title || 'Đang biểu diễn';
-            showToast('Đã chiếu Video YouTube lên máy chiếu!');
           } else if (currentActiveMedia.type === 'video') {
             vVideo.innerHTML = `<video src="${currentActiveMedia.src}" controls autoplay playsinline></video>`;
             vVideo.style.display = 'block';
             headerText.innerText = currentActiveMedia.title || 'Đang biểu diễn';
-            showToast('Đã chiếu Video MP4 lên máy chiếu!');
           } else {
             setProjectorScreen('poster');
           }
@@ -720,40 +842,45 @@
           headerText.innerText = 'Sân Khấu Văn Nghệ';
           vPoster.style.display = 'flex';
 
-          // NẾU CÓ ẢNH JPG/PNG BANNER THÌ HIỆN ẢNH JPG
           if (customBannerImgUrl) {
             pImg.src = customBannerImgUrl;
             pImg.style.display = 'block';
             pTxt.style.display = 'none';
-            showToast('Đã chiếu Ảnh Banner (JPG) lên máy chiếu!');
           } else {
-            // NẾU KHÔNG CÓ ẢNH THÌ HIỆN TEXT BANNER MẶC ĐỊNH
             pImg.style.display = 'none';
             pTxt.style.display = 'flex';
             pDoc.getElementById('pSongTitle').innerText = cand ? cand.song : 'Chờ biểu diễn';
             pDoc.getElementById('pSingerName').innerHTML = cand ? `Đội: <strong>${cand.name}</strong>` : '--';
-            showToast('Đã chiếu Banner tiết mục lên máy chiếu!');
           }
         } 
         else if (mode === 'ranking') {
-          const sorted = getSortedRankings();
-          pDoc.getElementById('pRankingBody').innerHTML = sorted.map((c, i) => `
-            <tr class="${i === 0 ? 'top1' : ''}">
-              <td style="text-align:center; font-weight:bold; color:#f9e79f;">${i+1}</td>
-              <td><strong>${c.sbd}</strong></td>
-              <td>${c.name}</td>
-              <td>${c.song}</td>
-              <td>${c.dept}</td>
-              <td style="text-align:center; font-weight:bold; color:#ffd700; font-size:1.3rem;">${c.avg > 0 ? c.avg.toFixed(2) : '-'}</td>
-            </tr>
-          `).join('');
+          updateProjectorRanking();
           headerText.innerText = 'BẢNG VINH DANH CHUNG CUỘC';
           vRanking.style.display = 'flex';
-          showToast('Đã chiếu Bảng Vinh Danh lên máy chiếu!');
         }
       } catch (err) {
         console.error('Lỗi khi chuyển đổi màn hình máy chiếu:', err);
       }
+    }
+
+    function updateProjectorRanking() {
+      if (!projectorWindowRef || projectorWindowRef.closed) return;
+      try {
+        const pDoc = projectorWindowRef.document;
+        const body = pDoc.getElementById('pRankingBody');
+        if (!body) return;
+        const sorted = getSortedRankings();
+        body.innerHTML = sorted.map((c, i) => `
+          <tr class="${i === 0 ? 'top1' : ''}">
+            <td style="text-align:center; font-weight:bold; color:#f9e79f;">${i+1}</td>
+            <td><strong>${c.sbd}</strong></td>
+            <td>${c.name}</td>
+            <td>${c.song}</td>
+            <td>${c.dept}</td>
+            <td style="text-align:center; font-weight:bold; color:#ffd700; font-size:1.3rem;">${c.avg > 0 ? c.avg.toFixed(2) : '-'}</td>
+          </tr>
+        `).join('');
+      } catch (e) {}
     }
 
     // TẢI ẢNH BANNER JPG / PNG TỪ MÁY
@@ -773,7 +900,7 @@
       setProjectorScreen('poster');
     }
 
-    // PHÁT VIDEO TRÊN MÁY TÍNH & ĐỒNG BỘ MÁY CHIẾU
+    // PHÁT MEDIA
     function playMediaSource(source, titleText) {
       const vid = document.getElementById('laptopVideo');
       const yt = document.getElementById('laptopYoutube');
@@ -832,7 +959,6 @@
       document.getElementById('manualInputUrl').value = '';
     }
 
-    // CHỌN THÍ SINH LÊN SÂN KHẤU
     function setCandidateToPerform(id) {
       currentPerformingId = id;
       const cand = candidates.find(c => c.id === id);
@@ -853,14 +979,14 @@
         document.getElementById('playingTitle').innerText = `Chờ phát: ${cand.song}`;
         currentActiveMedia = { type: 'none', src: '', title: '' };
         setProjectorScreen('poster');
-        showToast('Thí sinh chưa có sẵn video. Bạn có thể dán link YouTube hoặc tải file MP4!');
+        showToast('Thí sinh chưa có video. Bạn có thể dán link YouTube hoặc tải file MP4!');
       }
 
       document.getElementById('judgeCand').value = cand.id;
       loadScoreForSelectedCand();
     }
 
-    // CHẤM ĐIỂM
+    // CHẤM ĐIỂM & ĐỒNG BỘ ĐIỂM LÊN FIREBASE
     function calcTotalScore() {
       const v = Number(document.getElementById('scVoice').value) || 0;
       const r = Number(document.getElementById('scRhythm').value) || 0;
@@ -892,15 +1018,32 @@
       const cand = candidates.find(c => c.id === candId);
       if (!cand) return;
 
-      if (!cand.scores) cand.scores = {};
-      cand.scores[jNum] = {
+      const scoreObj = {
         voice: Number(document.getElementById('scVoice').value) || 0,
         rhythm: Number(document.getElementById('scRhythm').value) || 0,
         style: Number(document.getElementById('scStyle').value) || 0,
         emotion: Number(document.getElementById('scEmotion').value) || 0
       };
-      saveData();
-      showToast(`Đã lưu bí mật điểm GK ${jNum} cho ${cand.name}!`);
+
+      if (!cand.scores) cand.scores = {};
+      cand.scores[jNum] = scoreObj;
+
+      // NẾU CÓ KẾT NỐI FIREBASE, GHI NGAY VÀO ĐƯỜNG DẪN CỤ THỂ CỦA GK
+      if (isFirebaseReady) {
+        const candIndex = candidates.findIndex(c => c.id === candId);
+        if (candIndex !== -1) {
+          fbDb.ref(`candidates/${candIndex}/scores/${jNum}`).set(scoreObj)
+            .then(() => showToast(`Đã đồng bộ điểm GK ${jNum} lên Cloud!`))
+            .catch(err => {
+              console.error(err);
+              saveData();
+              showToast(`Đã lưu cục bộ (Lỗi Cloud: ${err.message})`);
+            });
+        }
+      } else {
+        saveData();
+        showToast(`Đã lưu cục bộ điểm GK ${jNum}!`);
+      }
     }
 
     function getCandidateAvg(cand) {
@@ -916,7 +1059,7 @@
     }
 
     function exportCSV() {
-      let csv = "\uFEFFHạng,SBD,Đội Biểu Diễn,Tiết Mục,Tác Giả,GK1 (TGĐ Vũ),GK2 (PTGĐ Tuấn),GK3 (PTGĐ Thẻ),Điểm TB\n";
+      let csv = "\uFEFFHạng,SBD,Đội Biểu Diễn,Tiết Mục,Đơn Vị,GK1 (TGĐ Vũ),GK2 (PTGĐ Tuấn),GK3 (PTGĐ Thẻ),Điểm TB\n";
       getSortedRankings().forEach((c, idx) => {
         csv += `"${idx+1}","${c.sbd}","${c.name}","${c.song}","${c.dept}","${c.g1}","${c.g2}","${c.g3}","${c.avg.toFixed(2)}"\n`;
       });
@@ -938,6 +1081,9 @@
           if (Array.isArray(data)) {
             candidates = data;
             saveData();
+            if (isFirebaseReady) {
+              fbDb.ref('candidates').set(candidates);
+            }
             showToast('Đã phục hồi danh sách thí sinh thành công!');
           } else {
             alert('File JSON không đúng cấu trúc danh sách thí sinh!');
@@ -1005,6 +1151,7 @@
             uploadedMediaMap[cand.id] = URL.createObjectURL(mp4File);
           }
           saveData();
+          if (isFirebaseReady) fbDb.ref('candidates').set(candidates);
           showToast(`Đã cập nhật thông tin cho thí sinh ${name}!`);
           cancelEditing();
         }
@@ -1025,6 +1172,7 @@
         });
 
         saveData();
+        if (isFirebaseReady) fbDb.ref('candidates').set(candidates);
         cancelEditing();
         showToast(`Đã thêm thí sinh ${name}!`);
       }
@@ -1036,6 +1184,7 @@
         candidates = candidates.filter(c => c.id !== id);
         delete uploadedMediaMap[id];
         saveData();
+        if (isFirebaseReady) fbDb.ref('candidates').set(candidates);
         showToast(`Đã xóa!`);
       }
     }
@@ -1045,6 +1194,7 @@
         candidates = JSON.parse(JSON.stringify(DEFAULT_CANDIDATES));
         uploadedMediaMap = {};
         saveData();
+        if (isFirebaseReady) fbDb.ref('candidates').set(candidates);
       }
     }
 
@@ -1066,7 +1216,7 @@
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(`tab-${k}`).classList.add('active');
-      const idx = ['stage','judge','ranking','admin'].indexOf(k);
+      const idx = ['stage','judge','ranking','admin','cloud'].indexOf(k);
       if (idx !== -1) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
       if (k === 'judge') loadScoreForSelectedCand();
     }
@@ -1135,6 +1285,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      initFirebase();
       renderUI();
       setCandidateToPerform(currentPerformingId);
     });
